@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { StyleSheet, View, Alert } from 'react-native'
+import { StyleSheet, View, Alert, Text } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { Session } from '@supabase/supabase-js'
+import { FlashList } from '@shopify/flash-list'
 
 import Avatar from './Avatar'
 
@@ -11,10 +12,18 @@ export default function Account({ session }: { session: Session }) {
   const [username, setUsername] = useState('')
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [users, setUsers] = useState<{id: string}[]>([])
 
   useEffect(() => {
-    if (session) getProfile()
+    if (session) getProfile();
+    if (session) getAllUsers();
   }, [session])
+
+  async function getAllUsers() {
+    const { data, error} = await supabase.from("profiles").select('id');
+    if (error) console.log(error.message);
+    setUsers(data ?? []);
+  }
 
   async function getProfile() {
     try {
@@ -111,6 +120,12 @@ export default function Account({ session }: { session: Session }) {
 
       <View style={styles.verticallySpaced}>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+      </View>
+      <View style={[styles.verticallySpaced, {height: 200}]}>
+        <FlashList
+          data={users}
+          renderItem={({ item }) => <Text>{item.id}</Text>}
+        />
       </View>
     </View>
   )
