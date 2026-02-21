@@ -35,3 +35,8 @@ After running the command above, you will see a QR code in your terminal. You ma
 If you're using an Android Emulator or iOS Simulator, you can press `a` or `i` respectively to open the app.
 
 ## CI/CD
+
+The current GitHub Actions pipeline runs on Ubuntu and has 2 main jobs:
+
+1. Initial code typecheck.
+2. Android environment setup and application apk build.
