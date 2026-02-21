@@ -16,7 +16,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package":"StrengthFlow",
+      "package":"com.dnvas.strengthflow",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
