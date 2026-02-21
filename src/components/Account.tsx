@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { StyleSheet, View, Alert, Text } from 'react-native'
-import { Button, Input } from '@rneui/themed'
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native'
 import { Session } from '@supabase/supabase-js'
 import { FlashList } from '@shopify/flash-list'
 
@@ -12,17 +19,17 @@ export default function Account({ session }: { session: Session }) {
   const [username, setUsername] = useState('')
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
-  const [users, setUsers] = useState<{id: string}[]>([])
+  const [users, setUsers] = useState<{ id: string }[]>([])
 
   useEffect(() => {
-    if (session) getProfile();
-    if (session) getAllUsers();
+    if (session) getProfile()
+    if (session) getAllUsers()
   }, [session])
 
   async function getAllUsers() {
-    const { data, error} = await supabase.from("profiles").select('id');
-    if (error) console.log(error.message);
-    setUsers(data ?? []);
+    const { data, error } = await supabase.from('profiles').select('id')
+    if (error) console.log(error.message)
+    setUsers(data ?? [])
   }
 
   async function getProfile() {
@@ -101,27 +108,55 @@ export default function Account({ session }: { session: Session }) {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={[styles.input, styles.inputDisabled]}
+          value={session?.user?.email}
+          editable={false}
+        />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
+        <Text style={styles.label}>Username</Text>
+        <TextInput
+          style={styles.input}
+          value={username || ''}
+          onChangeText={(text: string) => setUsername(text)}
+        />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
-      </View>
-
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
-          disabled={loading}
+        <Text style={styles.label}>Website</Text>
+        <TextInput
+          style={styles.input}
+          value={website || ''}
+          onChangeText={(text: string) => setWebsite(text)}
         />
       </View>
 
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          disabled={loading}
+          onPress={() =>
+            updateProfile({ username, website, avatar_url: avatarUrl })
+          }
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Update</Text>
+          )}
+        </TouchableOpacity>
       </View>
-      <View style={[styles.verticallySpaced, {height: 200}]}>
+
+      <View style={styles.verticallySpaced}>
+        <TouchableOpacity
+          style={styles.buttonSecondary}
+          onPress={() => supabase.auth.signOut()}
+        >
+          <Text style={styles.buttonSecondaryText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={[styles.verticallySpaced, { height: 200 }]}>
         <FlashList
           data={users}
           renderItem={({ item }) => <Text>{item.id}</Text>}
@@ -143,5 +178,49 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 4,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+  },
+  inputDisabled: {
+    backgroundColor: '#f0f0f0',
+    color: '#999',
+  },
+  button: {
+    backgroundColor: '#2089dc',
+    borderRadius: 8,
+    padding: 14,
+    alignItems: 'center',
+  },
+  buttonSecondary: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#2089dc',
+    borderRadius: 8,
+    padding: 14,
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  buttonSecondaryText: {
+    color: '#2089dc',
+    fontSize: 16,
+    fontWeight: '600',
   },
 })
