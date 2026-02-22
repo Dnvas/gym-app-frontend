@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "gym-app-frontend",
-    "slug": "gym-app-frontend",
+    "name": "Strength Flow",
+    "slug": "strength-flow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package":"com.dnvas.strengthflow",
+      "package": "com.dnvas.strengthflow",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ce0f1cc2-2bc8-4386-b9de-0d90c125597f"
+      }
+    },
+    "owner": "dnvas"
   }
 }
