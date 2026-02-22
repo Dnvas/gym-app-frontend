@@ -1,3 +1,4 @@
+// src/navigation/MainNavigator.tsx
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -5,13 +6,16 @@ import { Ionicons } from '@expo/vector-icons'
 
 // Screens
 import HomeScreen from '../screens/main/HomeScreen'
+import TemplateDetailScreen from '../screens/main/TemplateDetailScreen'
+import ActiveWorkoutScreen from '../screens/main/ActiveWorkoutScreen'
+import WorkoutSummaryScreen from '../screens/main/WorkoutSummaryScreen'
 import HistoryScreen from '../screens/main/HistoryScreen'
 import AnalyticsScreen from '../screens/main/AnalyticsScreen'
 import ProfileScreen from '../screens/main/ProfileScreen'
 
 // Types
 export type MainTabParamList = {
-  Home: undefined
+  HomeTab: undefined
   History: undefined
   Analytics: undefined
   Profile: undefined
@@ -21,6 +25,7 @@ export type HomeStackParamList = {
   HomeMain: undefined
   TemplateDetail: { templateId: string }
   ActiveWorkout: { workoutId: string }
+  WorkoutSummary: { workoutId: string }
 }
 
 const Tab = createBottomTabNavigator<MainTabParamList>()
@@ -35,10 +40,21 @@ function HomeStackNavigator() {
       }}
     >
       <HomeStack.Screen name="HomeMain" component={HomeScreen} />
-      {/* These will be added later:
       <HomeStack.Screen name="TemplateDetail" component={TemplateDetailScreen} />
-      <HomeStack.Screen name="ActiveWorkout" component={ActiveWorkoutScreen} />
-      */}
+      <HomeStack.Screen 
+        name="ActiveWorkout" 
+        component={ActiveWorkoutScreen}
+        options={{
+          gestureEnabled: false, // Prevent swipe back during workout
+        }}
+      />
+      <HomeStack.Screen 
+        name="WorkoutSummary" 
+        component={WorkoutSummaryScreen}
+        options={{
+          gestureEnabled: false, // Prevent swipe back to active workout
+        }}
+      />
     </HomeStack.Navigator>
   )
 }
@@ -51,7 +67,7 @@ export default function MainNavigator() {
           let iconName: keyof typeof Ionicons.glyphMap
 
           switch (route.name) {
-            case 'Home':
+            case 'HomeTab':
               iconName = focused ? 'home' : 'home-outline'
               break
             case 'History':
@@ -85,7 +101,11 @@ export default function MainNavigator() {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeStackNavigator} />
+      <Tab.Screen 
+        name="HomeTab" 
+        component={HomeStackNavigator}
+        options={{ tabBarLabel: 'Home' }}
+      />
       <Tab.Screen name="History" component={HistoryScreen} />
       <Tab.Screen name="Analytics" component={AnalyticsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />

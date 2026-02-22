@@ -1,3 +1,4 @@
+// src/screens/main/HomeScreen.tsx
 import React, { useEffect, useState } from 'react'
 import {
   View,
@@ -10,8 +11,15 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { useWorkoutContext } from '../../contexts/WorkoutContext'
 import { supabase } from '../../lib/supabase'
+import { HomeStackParamList } from '../../navigation/MainNavigator'
+
+type HomeScreenProps = {
+  navigation: NativeStackNavigationProp<HomeStackParamList, 'HomeMain'>
+}
 
 interface WorkoutTemplate {
   id: string
@@ -22,8 +30,9 @@ interface WorkoutTemplate {
   exercise_count?: number
 }
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { profile } = useAuthContext()
+  const { isActive, workout } = useWorkoutContext()
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -76,9 +85,14 @@ export default function HomeScreen() {
     return 'Good evening'
   }
 
-  function handleStartWorkout(template: WorkoutTemplate) {
-    // TODO: Navigate to active workout screen
-    console.log('Starting workout:', template.name)
+  function handleTemplatePress(template: WorkoutTemplate) {
+    navigation.navigate('TemplateDetail', { templateId: template.id })
+  }
+
+  function handleContinueWorkout() {
+    if (workout) {
+      navigation.navigate('ActiveWorkout', { workoutId: workout.id })
+    }
   }
 
   function renderTemplateCard({ item }: { item: WorkoutTemplate }) {
@@ -87,7 +101,7 @@ export default function HomeScreen() {
     return (
       <TouchableOpacity
         style={styles.templateCard}
-        onPress={() => handleStartWorkout(item)}
+        onPress={() => handleTemplatePress(item)}
         activeOpacity={0.7}
       >
         <View style={styles.templateContent}>
@@ -125,6 +139,26 @@ export default function HomeScreen() {
           <Text style={styles.subtitle}>Ready to train?</Text>
         </View>
       </View>
+
+      {/* Active Workout Banner */}
+      {isActive && workout && (
+        <TouchableOpacity
+          style={styles.activeWorkoutBanner}
+          onPress={handleContinueWorkout}
+        >
+          <View style={styles.activeWorkoutInfo}>
+            <View style={styles.pulsingDot} />
+            <View>
+              <Text style={styles.activeWorkoutTitle}>Workout in Progress</Text>
+              <Text style={styles.activeWorkoutName}>{workout.name}</Text>
+            </View>
+          </View>
+          <View style={styles.continueButton}>
+            <Text style={styles.continueButtonText}>Continue</Text>
+            <Ionicons name="arrow-forward" size={16} color="#fff" />
+          </View>
+        </TouchableOpacity>
+      )}
 
       {/* Quick Stats Card */}
       <View style={styles.statsCard}>
@@ -201,6 +235,50 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginTop: 4,
+  },
+  activeWorkoutBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#1E3A5F',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    borderRadius: 12,
+    padding: 16,
+  },
+  activeWorkoutInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  pulsingDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#00D9C4',
+  },
+  activeWorkoutTitle: {
+    fontSize: 12,
+    color: '#a0b4c8',
+  },
+  activeWorkoutName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  continueButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#00D9C4',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  continueButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 14,
   },
   statsCard: {
     flexDirection: 'row',
