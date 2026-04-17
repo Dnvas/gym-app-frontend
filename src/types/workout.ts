@@ -170,3 +170,16 @@ export interface WorkoutSummary {
   total_sets: number
   total_volume_kg: number
 }
+
+// Local form state for template exercises (before persisting to DB)
+export interface TemplateExerciseFormData {
+  tempId: string            // client-side key (not persisted)
+  exercise_id: string
+  exercise: Exercise        // joined for display
+  order_index: number
+  target_sets: number       // default 3, range 3-20
+  target_reps: number | null
+  target_rpe: number | null // range 1-10
+  rest_seconds: number      // default 90, range 0-600
+  notes: string | null
+}
