@@ -7,9 +7,11 @@ import { Ionicons } from '@expo/vector-icons'
 // Screens
 import HomeScreen from '../screens/main/HomeScreen'
 import TemplateDetailScreen from '../screens/main/TemplateDetailScreen'
+import TemplateFormScreen from '../screens/main/TemplateFormScreen'
 import ActiveWorkoutScreen from '../screens/main/ActiveWorkoutScreen'
 import WorkoutSummaryScreen from '../screens/main/WorkoutSummaryScreen'
 import HistoryScreen from '../screens/main/HistoryScreen'
+import WorkoutDetailScreen from '../screens/main/WorkoutDetailScreen'
 import AnalyticsScreen from '../screens/main/AnalyticsScreen'
 import ProfileScreen from '../screens/main/ProfileScreen'
 
@@ -24,12 +26,19 @@ export type MainTabParamList = {
 export type HomeStackParamList = {
   HomeMain: undefined
   TemplateDetail: { templateId: string }
+  TemplateForm: { templateId?: string }
   ActiveWorkout: { workoutId: string }
   WorkoutSummary: { workoutId: string }
 }
 
+export type HistoryStackParamList = {
+  HistoryMain: undefined
+  WorkoutDetail: { workoutId: string }
+}
+
 const Tab = createBottomTabNavigator<MainTabParamList>()
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
+const HistoryStack = createNativeStackNavigator<HistoryStackParamList>()
 
 // Home Stack Navigator (for nested navigation within Home tab)
 function HomeStackNavigator() {
@@ -41,21 +50,36 @@ function HomeStackNavigator() {
     >
       <HomeStack.Screen name="HomeMain" component={HomeScreen} />
       <HomeStack.Screen name="TemplateDetail" component={TemplateDetailScreen} />
-      <HomeStack.Screen 
-        name="ActiveWorkout" 
+      <HomeStack.Screen name="TemplateForm" component={TemplateFormScreen} />
+      <HomeStack.Screen
+        name="ActiveWorkout"
         component={ActiveWorkoutScreen}
         options={{
           gestureEnabled: false, // Prevent swipe back during workout
         }}
       />
-      <HomeStack.Screen 
-        name="WorkoutSummary" 
+      <HomeStack.Screen
+        name="WorkoutSummary"
         component={WorkoutSummaryScreen}
         options={{
           gestureEnabled: false, // Prevent swipe back to active workout
         }}
       />
     </HomeStack.Navigator>
+  )
+}
+
+// History Stack Navigator (for nested navigation within History tab)
+function HistoryStackNavigator() {
+  return (
+    <HistoryStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <HistoryStack.Screen name="HistoryMain" component={HistoryScreen} />
+      <HistoryStack.Screen name="WorkoutDetail" component={WorkoutDetailScreen} />
+    </HistoryStack.Navigator>
   )
 }
 
@@ -106,7 +130,7 @@ export default function MainNavigator() {
         component={HomeStackNavigator}
         options={{ tabBarLabel: 'Home' }}
       />
-      <Tab.Screen name="History" component={HistoryScreen} />
+      <Tab.Screen name="History" component={HistoryStackNavigator} />
       <Tab.Screen name="Analytics" component={AnalyticsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
