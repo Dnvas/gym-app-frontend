@@ -1,5 +1,5 @@
 // src/screens/main/HomeScreen.tsx
-import React, { useEffect, useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   View,
   Text,
@@ -8,12 +8,15 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useFocusEffect } from '@react-navigation/native'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
+import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import { supabase } from '../../lib/supabase'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 
@@ -33,17 +36,20 @@ interface WorkoutTemplate {
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { profile } = useAuthContext()
   const { isActive, workout } = useWorkoutContext()
+  const { deleteTemplate } = useTemplateManagement()
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
-  useEffect(() => {
-    fetchTemplates()
-  }, [])
+  // Refresh list each time this screen comes into focus (covers create/edit returns)
+  useFocusEffect(
+    useCallback(() => {
+      fetchTemplates()
+    }, [])
+  )
 
   async function fetchTemplates() {
     try {
-      // Fetch templates with exercise count
       const { data, error } = await supabase
         .from('workout_templates')
         .select(`
@@ -58,7 +64,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
       if (error) throw error
 
-      // Transform data to include exercise count
       const templatesWithCount = data?.map(template => ({
         ...template,
         exercise_count: template.template_exercises?.[0]?.count ?? 0,
@@ -89,6 +94,46 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     navigation.navigate('TemplateDetail', { templateId: template.id })
   }
 
+  // SEDP-74: Long-press shows manage options for user-owned templates
+  function handleTemplateLongPress(template: WorkoutTemplate) {
+    if (!template.created_by || template.created_by !== profile?.id) return
+
+    Alert.alert(template.name, '', [
+      {
+        text: 'Edit',
+        onPress: () => navigation.navigate('TemplateForm', { templateId: template.id }),
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => confirmDelete(template),
+      },
+      { text: 'Cancel', style: 'cancel' },
+    ])
+  }
+
+  function confirmDelete(template: WorkoutTemplate) {
+    Alert.alert(
+      'Delete Template',
+      `Delete "${template.name}"? This cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deleteTemplate(template.id)
+            if (result.success) {
+              fetchTemplates()
+            } else {
+              Alert.alert('Error', result.error ?? 'Failed to delete template')
+            }
+          },
+        },
+      ]
+    )
+  }
+
   function handleContinueWorkout() {
     if (workout) {
       navigation.navigate('ActiveWorkout', { workoutId: workout.id })
@@ -102,6 +147,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
       <TouchableOpacity
         style={styles.templateCard}
         onPress={() => handleTemplatePress(item)}
+        onLongPress={() => handleTemplateLongPress(item)}
         activeOpacity={0.7}
       >
         <View style={styles.templateContent}>
@@ -181,7 +227,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
       {/* Templates Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Workout Templates</Text>
-        
+
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#1E3A5F" />
@@ -190,7 +236,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           <FlatList
             data={templates}
             renderItem={renderTemplateCard}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             contentContainerStyle={styles.templateList}
             showsVerticalScrollIndicator={false}
             refreshControl={
@@ -205,13 +251,22 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
                 <Ionicons name="barbell-outline" size={48} color="#ccc" />
                 <Text style={styles.emptyText}>No templates yet</Text>
                 <Text style={styles.emptySubtext}>
-                  Create your first workout template
+                  Tap + to create your first workout template
                 </Text>
               </View>
             }
           />
         )}
       </View>
+
+      {/* FAB: create new template */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate('TemplateForm', {})}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
@@ -324,7 +379,7 @@ const styles = StyleSheet.create({
   },
   templateList: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 88,
   },
   templateCard: {
     flexDirection: 'row',
@@ -392,5 +447,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999',
     marginTop: 4,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 24,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#00D9C4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
   },
 })
