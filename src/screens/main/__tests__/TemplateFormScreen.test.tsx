@@ -7,6 +7,8 @@ import TemplateFormScreen from '../TemplateFormScreen'
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
 
+// Prevents supabase.ts from being evaluated when Jest auto-mocks useTemplateManagement
+jest.mock('../../../lib/supabase')
 jest.mock('../../../hooks/useTemplateManagement')
 jest.mock('../../../components/workout/ExercisePickerModal', () => () => null)
 

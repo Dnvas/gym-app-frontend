@@ -6,6 +6,8 @@ import HistoryScreen from '../HistoryScreen'
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
 
+// Prevents supabase.ts from being evaluated when Jest auto-mocks useWorkoutHistory
+jest.mock('../../../lib/supabase')
 jest.mock('../../../contexts/AuthContext')
 jest.mock('../../../hooks/useWorkoutHistory')
 
