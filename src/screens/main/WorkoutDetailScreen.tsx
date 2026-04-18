@@ -17,6 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 import { HistoryStackParamList } from '../../navigation/MainNavigator'
 import { useWorkoutHistory, WorkoutDetail } from '../../hooks/useWorkoutHistory'
+import { colors } from '../../theme'
 import {
   formatMuscleGroup,
   getMuscleColor,
@@ -241,7 +242,7 @@ export default function WorkoutDetailScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -254,7 +255,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
     flex: 1,
     textAlign: 'center',
     marginHorizontal: 8,
@@ -266,14 +267,14 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
   },
   scrollContent: {
     paddingBottom: 32,
   },
   // Stats card
   statsCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginBottom: 12,
     borderRadius: 12,
@@ -287,12 +288,12 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 2,
   },
   timeRangeText: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: 16,
   },
   statsGrid: {
@@ -308,20 +309,20 @@ const styles = StyleSheet.create({
   statDivider: {
     width: 1,
     height: 40,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
   },
   statValue: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   statLabel: {
     fontSize: 11,
-    color: '#999',
+    color: colors.text.muted,
   },
   // Notes card
   notesCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginBottom: 12,
     borderRadius: 12,
@@ -341,26 +342,26 @@ const styles = StyleSheet.create({
   notesLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   notesText: {
     fontSize: 14,
-    color: '#333',
+    color: colors.text.primary,
     lineHeight: 20,
   },
   // Section title
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#333',
+    color: colors.text.primary,
     paddingHorizontal: 16,
     marginBottom: 10,
   },
   // Exercise cards
   exerciseCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginBottom: 12,
     borderRadius: 12,
@@ -380,14 +381,14 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
     marginTop: 1,
   },
   exerciseIndexText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -397,7 +398,7 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 4,
   },
   exerciseMeta: {
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#f0f0f0',
+    borderColor: colors.borderLight,
   },
   setRow: {
     flexDirection: 'row',
@@ -438,10 +439,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   setRowWarmup: {
-    backgroundColor: '#fafafa',
+    backgroundColor: colors.borderLight,
   },
   setCell: {
     fontSize: 14,
@@ -462,19 +463,19 @@ const styles = StyleSheet.create({
   setHeaderText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#999',
+    color: colors.text.muted,
     letterSpacing: 0.5,
   },
   setTextWorking: {
-    color: '#333',
+    color: colors.text.primary,
     fontWeight: '500',
   },
   setTextWarmup: {
-    color: '#aaa',
+    color: colors.text.muted,
   },
   noSetsText: {
     fontSize: 13,
-    color: '#999',
+    color: colors.text.muted,
     fontStyle: 'italic',
     paddingTop: 4,
   },

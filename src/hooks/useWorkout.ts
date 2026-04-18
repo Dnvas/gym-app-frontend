@@ -378,7 +378,7 @@ export function useWorkout() {
 
         // Step 2: Get the workout_exercise id for this exercise in that workout
         const workoutExercise = recentWorkout.workout_exercises.find(
-          (we: any) => we.exercise_id === exerciseId
+          (we: { exercise_id: string; id: string }) => we.exercise_id === exerciseId
         )
 
         if (!workoutExercise) return []

@@ -24,6 +24,7 @@ import { HomeStackParamList } from '../../navigation/MainNavigator'
 import SetInputCard from '../../components/workout/SetInputCard'
 import RestTimer from '../../components/workout/RestTimer'
 import ExerciseSwapModal from '../../components/workout/ExerciseSwapModal'
+import { colors } from '../../theme'
 
 type ActiveWorkoutScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'ActiveWorkout'>
@@ -259,7 +260,7 @@ export default function ActiveWorkoutScreen({
           <Ionicons
             name="chevron-back"
             size={24}
-            color={currentExerciseIndex === 0 ? '#ccc' : '#1E3A5F'}
+            color={currentExerciseIndex === 0 ? colors.text.faint : colors.primary}
           />
           <Text
             style={[
@@ -306,7 +307,7 @@ export default function ActiveWorkoutScreen({
           <Ionicons
             name="chevron-forward"
             size={24}
-            color={currentExerciseIndex === exercises.length - 1 ? '#ccc' : '#1E3A5F'}
+            color={currentExerciseIndex === exercises.length - 1 ? colors.text.faint : colors.primary}
           />
         </TouchableOpacity>
       </View>
@@ -372,7 +373,7 @@ export default function ActiveWorkoutScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
@@ -384,9 +385,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   backButton: {
     padding: 8,
@@ -398,7 +399,7 @@ const styles = StyleSheet.create({
   workoutName: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   timerContainer: {
     flexDirection: 'row',
@@ -409,44 +410,44 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   finishButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
     borderRadius: 8,
   },
   finishButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontWeight: '600',
     fontSize: 14,
   },
   progressContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
   },
   progressBar: {
     height: 4,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     borderRadius: 2,
   },
   progressText: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 6,
     textAlign: 'center',
   },
   statsBar: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     paddingVertical: 12,
     paddingHorizontal: 16,
     marginTop: 1,
@@ -458,16 +459,16 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   statLabel: {
     fontSize: 11,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 2,
   },
   statDivider: {
     width: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
     marginVertical: 4,
   },
   exerciseNav: {
@@ -476,9 +477,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: colors.border,
   },
   navButton: {
     flexDirection: 'row',
@@ -491,11 +492,11 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     fontSize: 14,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   navButtonTextDisabled: {
-    color: '#ccc',
+    color: colors.text.faint,
   },
   exerciseDots: {
     flexDirection: 'row',
@@ -505,14 +506,14 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
   },
   dotActive: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     width: 20,
   },
   dotCompleted: {
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
   },
   modalOverlay: {
     flex: 1,
@@ -521,7 +522,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 24,
     width: '85%',
@@ -530,19 +531,19 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.text.primary,
     textAlign: 'center',
     marginBottom: 16,
   },
   modalStats: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
     borderRadius: 8,
     padding: 16,
     marginBottom: 20,
   },
   modalStatText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: 4,
   },
   modalButtons: {
@@ -554,22 +555,22 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     alignItems: 'center',
   },
   modalCancelText: {
-    color: '#666',
+    color: colors.text.secondary,
     fontWeight: '600',
   },
   modalConfirmButton: {
     flex: 1,
     padding: 14,
     borderRadius: 8,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
     alignItems: 'center',
   },
   modalConfirmText: {
-    color: '#fff',
+    color: colors.surface,
     fontWeight: '600',
   },
 })

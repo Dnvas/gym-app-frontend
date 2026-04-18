@@ -13,10 +13,11 @@ import { Ionicons } from '@expo/vector-icons'
 import { useAnalytics } from '../../hooks/useAnalytics'
 import { WeeklyVolumeData, MuscleVolumeData } from '../../types/analytics'
 import { MuscleGroup } from '../../types/workout'
+import { colors } from '../../theme'
 
 // Muscle group display names and colors
 const MUSCLE_CONFIG: Record<MuscleGroup, { label: string; color: string }> = {
-  chest: { label: 'Chest', color: '#e74c3c' },
+  chest: { label: 'Chest', color: colors.error },
   back: { label: 'Back', color: '#3498db' },
   lats: { label: 'Lats', color: '#2980b9' },
   traps: { label: 'Traps', color: '#1abc9c' },
@@ -25,9 +26,9 @@ const MUSCLE_CONFIG: Record<MuscleGroup, { label: string; color: string }> = {
   rear_delt: { label: 'Rear Delts', color: '#713580' },
   biceps: { label: 'Biceps', color: '#e67e22' },
   triceps: { label: 'Triceps', color: '#d35400' },
-  forearms: { label: 'Forearms', color: '#f39c12' },
-  quadriceps: { label: 'Quads', color: '#27ae60' },
-  hamstrings: { label: 'Hamstrings', color: '#2ecc71' },
+  forearms: { label: 'Forearms', color: colors.warning },
+  quadriceps: { label: 'Quads', color: colors.success },
+  hamstrings: { label: 'Hamstrings', color: colors.success },
   glutes: { label: 'Glutes', color: '#16a085' },
   calves: { label: 'Calves', color: '#1abc9c' },
   core: { label: 'Core', color: '#f1c40f' },
@@ -94,12 +95,12 @@ export default function VolumeTab() {
               <Ionicons
                 name={muscleData.change_vs_last_week >= 0 ? 'trending-up' : 'trending-down'}
                 size={12}
-                color={muscleData.change_vs_last_week >= 0 ? '#27ae60' : '#e74c3c'}
+                color={muscleData.change_vs_last_week >= 0 ? colors.success : colors.error}
               />
               <Text
                 style={[
                   styles.changeText,
-                  { color: muscleData.change_vs_last_week >= 0 ? '#27ae60' : '#e74c3c' },
+                  { color: muscleData.change_vs_last_week >= 0 ? colors.success : colors.error },
                 ]}
               >
                 {muscleData.change_vs_last_week > 0 ? '+' : ''}
@@ -181,7 +182,7 @@ export default function VolumeTab() {
           <Ionicons
             name="chevron-forward"
             size={24}
-            color={weekOffset >= 0 ? '#ccc' : '#1E3A5F'}
+            color={weekOffset >= 0 ? colors.text.faint : colors.primary}
           />
         </TouchableOpacity>
       </View>
@@ -266,13 +267,13 @@ export default function VolumeTab() {
                   <Ionicons
                     name={data.totals.change_vs_last_week >= 0 ? 'trending-up' : 'trending-down'}
                     size={14}
-                    color={data.totals.change_vs_last_week >= 0 ? '#27ae60' : '#e74c3c'}
+                    color={data.totals.change_vs_last_week >= 0 ? colors.success : colors.error}
                   />
                   <Text
                     style={[
                       styles.totalChangeText,
                       {
-                        color: data.totals.change_vs_last_week >= 0 ? '#27ae60' : '#e74c3c',
+                        color: data.totals.change_vs_last_week >= 0 ? colors.success : colors.error,
                       },
                     ]}
                   >
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
@@ -318,16 +319,16 @@ const styles = StyleSheet.create({
   weekLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   weekDates: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 2,
   },
   metricToggle: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 4,
     marginBottom: 12,
@@ -339,15 +340,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   metricButtonActive: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
   },
   metricButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
   },
   metricButtonTextActive: {
-    color: '#fff',
+    color: colors.surface,
   },
   legend: {
     flexDirection: 'row',
@@ -366,22 +367,22 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   legendCompound: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
   },
   legendIsolation: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     opacity: 0.4,
   },
   legendText: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
   },
   loadingContainer: {
     paddingVertical: 40,
     alignItems: 'center',
   },
   barsContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -397,7 +398,7 @@ const styles = StyleSheet.create({
   muscleName: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#333',
+    color: colors.text.primary,
   },
   changeContainer: {
     flexDirection: 'row',
@@ -415,7 +416,7 @@ const styles = StyleSheet.create({
   },
   barBackground: {
     height: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
     borderRadius: 4,
     overflow: 'hidden',
     flexDirection: 'row',
@@ -434,11 +435,11 @@ const styles = StyleSheet.create({
   totalValue: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#333',
+    color: colors.text.primary,
   },
   splitValue: {
     fontSize: 10,
-    color: '#999',
+    color: colors.text.muted,
   },
   emptyState: {
     alignItems: 'center',
@@ -447,17 +448,17 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 12,
   },
   emptySubtext: {
     fontSize: 13,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
     textAlign: 'center',
   },
   totalsCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
   },
@@ -466,7 +467,7 @@ const styles = StyleSheet.create({
   },
   totalLabel: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: 4,
   },
   totalValueRow: {
@@ -478,15 +479,15 @@ const styles = StyleSheet.create({
   totalMainValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   totalSplitValue: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
   },
   totalDivider: {
     height: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
     marginVertical: 4,
   },
   totalChange: {

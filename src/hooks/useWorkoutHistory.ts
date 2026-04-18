@@ -4,8 +4,10 @@ import { useState, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuthContext } from '../contexts/AuthContext'
 import { WorkoutSummary } from '../types/workout'
+import { WorkoutWithExercisesRow, WorkoutExerciseRow, WorkoutSetRow } from '../types/supabase'
 import { getMonthBoundaries, toDateKey } from '../utils/dateHelpers'
 import { calcSetVolume } from '../utils/workoutCalculations'
+import { colors } from '../theme'
 
 export type MarkedDates = Record<string, { marked: boolean; dotColor: string; selected?: boolean }>
 
@@ -85,15 +87,15 @@ export function useWorkoutHistory() {
 
         if (queryError) throw queryError
 
-        const computed: WorkoutSummary[] = (data ?? []).map((w: any) => {
+        const computed: WorkoutSummary[] = (data as WorkoutWithExercisesRow[] ?? []).map((w) => {
           const exercises = w.workout_exercises ?? []
           let totalSets = 0
           let totalVolume = 0
 
-          exercises.forEach((we: any) => {
-            const workingSets = (we.sets ?? []).filter((s: any) => !s.is_warmup)
+          exercises.forEach((we: WorkoutExerciseRow) => {
+            const workingSets = (we.sets ?? []).filter((s: WorkoutSetRow) => !s.is_warmup)
             totalSets += workingSets.length
-            workingSets.forEach((s: any) => {
+            workingSets.forEach((s: WorkoutSetRow) => {
               totalVolume += calcSetVolume(s.weight_kg, s.reps)
             })
           })
@@ -111,7 +113,7 @@ export function useWorkoutHistory() {
             name: w.name,
             started_at: w.started_at,
             completed_at: w.completed_at,
-            status: w.status,
+            status: w.status as WorkoutSummary['status'],
             notes: w.notes,
             duration_minutes: durationMinutes,
             exercise_count: exercises.length,
@@ -124,7 +126,7 @@ export function useWorkoutHistory() {
         const marks: MarkedDates = {}
         computed.forEach((w) => {
           const dateKey = toDateKey(w.started_at)
-          marks[dateKey] = { marked: true, dotColor: '#00D9C4' }
+          marks[dateKey] = { marked: true, dotColor: colors.accent }
         })
 
         setSummaries(computed)
@@ -166,22 +168,23 @@ export function useWorkoutHistory() {
 
         if (queryError) throw queryError
 
-        const exercises = (data.workout_exercises ?? [])
-          .sort((a: any, b: any) => a.order_index - b.order_index)
-          .map((we: any) => ({
+        const exercises = ((data.workout_exercises as WorkoutExerciseRow[]) ?? [])
+          .sort((a, b) => a.order_index - b.order_index)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((we) => ({
             id: we.id,
             order_index: we.order_index,
-            is_substitution: we.is_substitution,
-            exercise: we.exercise,
-            sets: (we.sets ?? []).sort((a: any, b: any) => a.set_number - b.set_number),
+            is_substitution: (we as any).is_substitution as boolean,
+            exercise: we.exercise as WorkoutDetail['exercises'][number]['exercise'],
+            sets: (we.sets ?? []).sort((a, b) => (a.set_number ?? 0) - (b.set_number ?? 0)),
           }))
 
         let totalSets = 0
         let totalVolume = 0
-        exercises.forEach((ex: any) => {
-          const workingSets = ex.sets.filter((s: any) => !s.is_warmup)
+        exercises.forEach((ex) => {
+          const workingSets = ex.sets.filter((s: WorkoutSetRow) => !s.is_warmup)
           totalSets += workingSets.length
-          workingSets.forEach((s: any) => {
+          workingSets.forEach((s: WorkoutSetRow) => {
             totalVolume += calcSetVolume(s.weight_kg, s.reps)
           })
         })

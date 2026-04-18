@@ -1,6 +1,8 @@
 // src/utils/formatting.ts
 // Formatting utility functions extracted from multiple screens and components
 
+import { colors } from '../theme/colors'
+
 export function formatMuscleGroup(muscle: string): string {
   return muscle
     .split('_')
@@ -8,26 +10,8 @@ export function formatMuscleGroup(muscle: string): string {
     .join(' ')
 }
 
-const MUSCLE_COLORS: Record<string, string> = {
-  chest: '#e74c3c',
-  back: '#3498db',
-  lats: '#3498db',
-  front_delt: '#9b59b6',
-  side_delt: '#9b59b6',
-  rear_delt: '#9b59b6',
-  biceps: '#e67e22',
-  triceps: '#e67e22',
-  forearms: '#e67e22',
-  quadriceps: '#27ae60',
-  hamstrings: '#27ae60',
-  glutes: '#27ae60',
-  calves: '#27ae60',
-  core: '#f39c12',
-  traps: '#1abc9c',
-}
-
 export function getMuscleColor(muscle: string): string {
-  return MUSCLE_COLORS[muscle] ?? '#666'
+  return (colors.muscles as Record<string, string>)[muscle] ?? colors.muscleDefault
 }
 
 export function formatDuration(minutes: number | null): string {

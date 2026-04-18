@@ -17,6 +17,7 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
 import { WorkoutExercise, WorkoutSet, PreviousSetData } from '../../types/workout'
+import { colors } from '../../theme'
 
 interface SetInputCardProps {
   workoutExercise: WorkoutExercise & {
@@ -366,7 +367,7 @@ export default function SetInputCard({
                   <Ionicons
                     name="checkmark"
                     size={20}
-                    color={!set.weight || !set.reps ? '#ccc' : '#fff'}
+                    color={!set.weight || !set.reps ? colors.text.faint : colors.surface}
                   />
                 </TouchableOpacity>
               )}
@@ -387,7 +388,7 @@ export default function SetInputCard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginTop: 1,
   },
   loadingContainer: {
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   headerLeft: {
     flex: 1,
@@ -409,11 +410,11 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.text.primary,
   },
   targetInfo: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   swapButton: {
@@ -422,12 +423,12 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
     borderRadius: 8,
   },
   swapButtonText: {
     fontSize: 14,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   previousInfo: {
@@ -436,11 +437,11 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.borderLight,
   },
   previousText: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
   },
   setsList: {
     flex: 1,
@@ -455,7 +456,7 @@ const styles = StyleSheet.create({
   tableHeaderText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#999',
+    color: colors.text.muted,
     textAlign: 'center',
   },
   setColumn: {
@@ -481,7 +482,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 8,
     marginBottom: 6,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.borderLight,
   },
   setRowCompleted: {
     backgroundColor: '#e8f8f5',
@@ -490,25 +491,25 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
   },
   setNumberCompleted: {
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
   },
   setNumberText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
   },
   prevText: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
   },
   prevTextEmpty: {
     fontSize: 12,
-    color: '#ccc',
+    color: colors.text.faint,
   },
   inputGroup: {
     flexDirection: 'row',
@@ -523,35 +524,35 @@ const styles = StyleSheet.create({
   },
   adjustButtonText: {
     fontSize: 18,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '600',
   },
   input: {
     width: 56,
     height: 36,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 6,
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   inputCompleted: {
-    backgroundColor: '#fff',
-    borderColor: '#00D9C4',
+    backgroundColor: colors.surface,
+    borderColor: colors.accent,
   },
   saveButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   saveButtonDisabled: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
   },
   deleteButton: {
     width: 36,
@@ -568,13 +569,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#1E3A5F',
+    borderColor: colors.primary,
     borderStyle: 'dashed',
     borderRadius: 8,
   },
   addSetButtonText: {
     fontSize: 14,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
 })

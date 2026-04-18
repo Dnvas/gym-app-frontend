@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useAnalytics } from '../../hooks/useAnalytics'
 import { GroupedPRsData, PRRecord, ExerciseForPR } from '../../types/analytics'
 import { MuscleGroup } from '../../types/workout'
+import { colors } from '../../theme'
 
 // Muscle group display config
 const MUSCLE_LABELS: Record<MuscleGroup, string> = {
@@ -451,7 +452,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#333',
+    color: colors.text.primary,
   },
   bigThreeGrid: {
     flexDirection: 'row',
@@ -459,7 +460,7 @@ const styles = StyleSheet.create({
   },
   bigThreeCard: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
   bigThreeTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#1E3A5F',
+    color: colors.primary,
     letterSpacing: 0.5,
     marginBottom: 8,
   },
@@ -479,16 +480,16 @@ const styles = StyleSheet.create({
   bigThreeWeight: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.text.primary,
   },
   bigThreeUnit: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginLeft: 2,
   },
   bigThreeReps: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 2,
   },
   bigThreeE1rm: {
@@ -496,19 +497,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     marginTop: 8,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
   bigThreeE1rmLabel: {
     fontSize: 11,
-    color: '#666',
+    color: colors.text.secondary,
   },
   bigThreeE1rmValue: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   bigThreeEmpty: {
     flex: 1,
@@ -517,14 +518,14 @@ const styles = StyleSheet.create({
   },
   bigThreeEmptyText: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
   },
   compoundSection: {
     marginBottom: 20,
   },
   compoundList: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     marginTop: 12,
     overflow: 'hidden',
@@ -535,7 +536,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   compoundInfo: {
     flex: 1,
@@ -546,7 +547,7 @@ const styles = StyleSheet.create({
   compoundName: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#333',
+    color: colors.text.primary,
   },
   compoundStats: {
     alignItems: 'flex-end',
@@ -554,7 +555,7 @@ const styles = StyleSheet.create({
   compoundWeight: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   isolationSection: {
     marginBottom: 20,
@@ -568,25 +569,25 @@ const styles = StyleSheet.create({
   muscleChip: {
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   muscleChipActive: {
-    backgroundColor: '#1E3A5F',
-    borderColor: '#1E3A5F',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   muscleChipText: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
   },
   muscleChipTextActive: {
-    color: '#fff',
+    color: colors.surface,
     fontWeight: '500',
   },
   isolationList: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     marginTop: 12,
     overflow: 'hidden',
@@ -596,16 +597,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   isolationName: {
     fontSize: 14,
-    color: '#333',
+    color: colors.text.primary,
   },
   isolationValue: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   emptyState: {
     alignItems: 'center',
@@ -614,12 +615,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginTop: 16,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     textAlign: 'center',
     marginTop: 8,
     paddingHorizontal: 20,
@@ -628,43 +629,43 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 10,
     marginTop: 20,
   },
   addButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 15,
     fontWeight: '600',
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   modalCancel: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
   },
   modalTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   modalSave: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   modalSaveDisabled: {
     opacity: 0.5,
@@ -675,7 +676,7 @@ const styles = StyleSheet.create({
   modalLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 8,
     marginTop: 16,
   },
@@ -683,21 +684,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   modalSelectorText: {
     fontSize: 16,
-    color: '#333',
+    color: colors.text.primary,
   },
   modalSelectorPlaceholder: {
-    color: '#999',
+    color: colors.text.muted,
   },
   exercisePickerList: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     marginTop: 8,
     maxHeight: 250,
@@ -705,14 +706,14 @@ const styles = StyleSheet.create({
   exercisePickerItem: {
     padding: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   exercisePickerItemSelected: {
     backgroundColor: '#e8f4f8',
   },
   exercisePickerItemText: {
     fontSize: 15,
-    color: '#333',
+    color: colors.text.primary,
   },
   preSelectedExercise: {
     marginBottom: 8,
@@ -722,20 +723,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#1E3A5F',
+    borderColor: colors.primary,
   },
   preSelectedText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   modalInput: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 14,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   e1rmPreview: {
     flexDirection: 'row',
@@ -748,16 +749,16 @@ const styles = StyleSheet.create({
   },
   e1rmPreviewLabel: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
   },
   e1rmPreviewValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   modalHint: {
     fontSize: 13,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 20,
     lineHeight: 18,
   },

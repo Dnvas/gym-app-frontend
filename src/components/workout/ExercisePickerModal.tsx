@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../../lib/supabase'
 import { Exercise, MuscleGroup } from '../../types/workout'
 import { formatMuscleGroup } from '../../utils/formatting'
+import { colors } from '../../theme'
 
 interface ExercisePickerModalProps {
   visible: boolean
@@ -221,7 +222,7 @@ export default function ExercisePickerModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -229,9 +230,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   headerButton: {
     width: 40,
@@ -242,25 +243,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginTop: 16,
     paddingHorizontal: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   searchInput: {
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 8,
     fontSize: 16,
-    color: '#333',
+    color: colors.text.primary,
   },
   filterContainer: {
     marginTop: 12,
@@ -272,23 +273,23 @@ const styles = StyleSheet.create({
   filterChip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     marginRight: 8,
   },
   filterChipActive: {
-    backgroundColor: '#1E3A5F',
-    borderColor: '#1E3A5F',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   filterChipText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
   filterChipTextActive: {
-    color: '#fff',
+    color: colors.surface,
   },
   loadingContainer: {
     flex: 1,
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
   exerciseItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
@@ -312,7 +313,7 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 6,
   },
   exerciseMeta: {
@@ -322,19 +323,19 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   muscleBadge: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 4,
   },
   muscleBadgeText: {
     fontSize: 11,
-    color: '#666',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
   equipmentText: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
   },
   compoundBadge: {
     backgroundColor: '#e8f4f8',
@@ -344,7 +345,7 @@ const styles = StyleSheet.create({
   },
   compoundBadgeText: {
     fontSize: 10,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   emptyContainer: {
@@ -354,12 +355,12 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 12,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
   },
 })

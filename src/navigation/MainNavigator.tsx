@@ -14,6 +14,7 @@ import HistoryScreen from '../screens/main/HistoryScreen'
 import WorkoutDetailScreen from '../screens/main/WorkoutDetailScreen'
 import AnalyticsScreen from '../screens/main/AnalyticsScreen'
 import ProfileScreen from '../screens/main/ProfileScreen'
+import { colors } from '../theme'
 
 // Types
 export type MainTabParamList = {
@@ -109,11 +110,11 @@ export default function MainNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />
         },
-        tabBarActiveTintColor: '#1E3A5F',
-        tabBarInactiveTintColor: '#999',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.text.muted,
         tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopColor: '#e0e0e0',
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
           paddingBottom: 5,
           paddingTop: 5,
           height: 60,
