@@ -130,6 +130,7 @@ function ExerciseConfigCard({
         </View>
         <View style={styles.exerciseCardActions}>
           <TouchableOpacity
+            testID={`move-up-${index}`}
             onPress={onMoveUp}
             disabled={index === 0}
             hitSlop={6}
@@ -138,6 +139,7 @@ function ExerciseConfigCard({
             <Ionicons name="chevron-up" size={20} color={index === 0 ? '#ddd' : '#666'} />
           </TouchableOpacity>
           <TouchableOpacity
+            testID={`move-down-${index}`}
             onPress={onMoveDown}
             disabled={index === total - 1}
             hitSlop={6}
