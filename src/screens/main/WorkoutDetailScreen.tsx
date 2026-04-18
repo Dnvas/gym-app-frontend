@@ -17,58 +17,17 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 import { HistoryStackParamList } from '../../navigation/MainNavigator'
 import { useWorkoutHistory, WorkoutDetail } from '../../hooks/useWorkoutHistory'
+import {
+  formatMuscleGroup,
+  getMuscleColor,
+  formatDuration,
+  formatLongDate,
+  formatTime,
+} from '../../utils/formatting'
 
 type WorkoutDetailScreenProps = {
   navigation: NativeStackNavigationProp<HistoryStackParamList, 'WorkoutDetail'>
   route: RouteProp<HistoryStackParamList, 'WorkoutDetail'>
-}
-
-function formatMuscleGroup(muscle: string): string {
-  return muscle
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-function getMuscleColor(muscle: string): string {
-  const colors: Record<string, string> = {
-    chest: '#e74c3c',
-    back: '#3498db',
-    lats: '#3498db',
-    front_delt: '#9b59b6',
-    side_delt: '#9b59b6',
-    rear_delt: '#9b59b6',
-    biceps: '#e67e22',
-    triceps: '#e67e22',
-    forearms: '#e67e22',
-    quadriceps: '#27ae60',
-    hamstrings: '#27ae60',
-    glutes: '#27ae60',
-    calves: '#27ae60',
-    core: '#f39c12',
-    traps: '#1abc9c',
-  }
-  return colors[muscle] || '#666'
-}
-
-function formatDuration(minutes: number | null): string {
-  if (minutes === null) return '-'
-  const hrs = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  return hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`
-}
-
-function formatLongDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
-function formatTime(isoString: string): string {
-  return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
 export default function WorkoutDetailScreen({

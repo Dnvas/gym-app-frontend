@@ -13,26 +13,9 @@ import {
   ExerciseForPR,
 } from '../types/analytics'
 import { MuscleGroup } from '../types/workout'
+import { getWeekBoundaries, toDateKey } from '../utils/dateHelpers'
+import { calcPctChange } from '../utils/workoutCalculations'
 
-// Helper to get week boundaries
-function getWeekBoundaries(startDate?: Date): { start: Date; end: Date } {
-  const now = startDate || new Date()
-  const dayOfWeek = now.getDay()
-  // Adjust to Monday (day 1) as start of week
-  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
-  
-  const start = new Date(now)
-  start.setDate(now.getDate() + diffToMonday)
-  start.setHours(0, 0, 0, 0)
-  
-  const end = new Date(start)
-  end.setDate(start.getDate() + 6)
-  end.setHours(23, 59, 59, 999)
-  
-  return { start, end }
-}
-
-// Helper to format date for Supabase
 function formatDate(date: Date): string {
   return date.toISOString()
 }
@@ -111,8 +94,9 @@ export function useAnalytics() {
         // Add change percentages
         muscleMap.forEach((data, muscle) => {
           const prevSets = prevMuscleMap.get(muscle) || 0
-          if (prevSets > 0) {
-            data.change_vs_last_week = Math.round(((data.total_sets - prevSets) / prevSets) * 100)
+          const pct = calcPctChange(data.total_sets, prevSets)
+          if (pct !== null) {
+            data.change_vs_last_week = pct
           }
         })
 
@@ -133,9 +117,7 @@ export function useAnalytics() {
 
         // Calculate total change vs last week
         const prevTotalSets = Array.from(prevMuscleMap.values()).reduce((a, b) => a + b, 0)
-        const changeVsLastWeek = prevTotalSets > 0
-          ? Math.round(((totals.total_sets - prevTotalSets) / prevTotalSets) * 100)
-          : undefined
+        const changeVsLastWeek = calcPctChange(totals.total_sets, prevTotalSets) ?? undefined
 
         return {
           start_date: start.toISOString(),
@@ -219,7 +201,7 @@ export function useAnalytics() {
           if (!row.weight_kg || !row.reps) return
           
           exerciseName = row.workout_exercise?.exercise?.name || ''
-          const dateKey = new Date(row.completed_at).toISOString().split('T')[0]
+          const dateKey = toDateKey(row.completed_at)
           const volume = row.weight_kg * row.reps
           
           const existing = dateMap.get(dateKey)

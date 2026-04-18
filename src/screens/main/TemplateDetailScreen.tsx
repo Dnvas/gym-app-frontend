@@ -21,38 +21,11 @@ import { useWorkoutContext } from '../../contexts/WorkoutContext'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import { WorkoutTemplateWithExercises, TemplateExercise, Exercise } from '../../types/workout'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
+import { formatMuscleGroup, getMuscleColor } from '../../utils/formatting'
 
 type TemplateDetailScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'TemplateDetail'>
   route: RouteProp<HomeStackParamList, 'TemplateDetail'>
-}
-
-function formatMuscleGroup(muscle: string): string {
-  return muscle
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-function getMuscleColor(muscle: string): string {
-  const colors: Record<string, string> = {
-    chest: '#e74c3c',
-    back: '#3498db',
-    lats: '#3498db',
-    front_delt: '#9b59b6',
-    side_delt: '#9b59b6',
-    rear_delt: '#9b59b6',
-    biceps: '#e67e22',
-    triceps: '#e67e22',
-    forearms: '#e67e22',
-    quadriceps: '#27ae60',
-    hamstrings: '#27ae60',
-    glutes: '#27ae60',
-    calves: '#27ae60',
-    core: '#f39c12',
-    traps: '#1abc9c',
-  }
-  return colors[muscle] || '#666'
 }
 
 export default function TemplateDetailScreen({

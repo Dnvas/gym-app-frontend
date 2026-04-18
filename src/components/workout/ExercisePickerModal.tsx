@@ -14,19 +14,13 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../../lib/supabase'
 import { Exercise, MuscleGroup } from '../../types/workout'
+import { formatMuscleGroup } from '../../utils/formatting'
 
 interface ExercisePickerModalProps {
   visible: boolean
   onClose: () => void
   onSelect: (exercise: Exercise) => void
   excludeExerciseIds?: string[] // already added to the template
-}
-
-function formatMuscleGroup(muscle: string): string {
-  return muscle
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
 }
 
 const MUSCLE_GROUPS: { label: string; muscles: MuscleGroup[] }[] = [

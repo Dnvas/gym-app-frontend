@@ -4,6 +4,8 @@ import { useState, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuthContext } from '../contexts/AuthContext'
 import { WorkoutSummary } from '../types/workout'
+import { getMonthBoundaries, toDateKey } from '../utils/dateHelpers'
+import { calcSetVolume } from '../utils/workoutCalculations'
 
 export type MarkedDates = Record<string, { marked: boolean; dotColor: string; selected?: boolean }>
 
@@ -40,14 +42,6 @@ export interface WorkoutDetail {
       is_dropset: boolean
     }[]
   }[]
-}
-
-function getMonthBoundaries(month: Date): { start: string; end: string } {
-  const start = new Date(month.getFullYear(), month.getMonth(), 1)
-  start.setHours(0, 0, 0, 0)
-  const end = new Date(month.getFullYear(), month.getMonth() + 1, 0)
-  end.setHours(23, 59, 59, 999)
-  return { start: start.toISOString(), end: end.toISOString() }
 }
 
 export function useWorkoutHistory() {
@@ -100,7 +94,7 @@ export function useWorkoutHistory() {
             const workingSets = (we.sets ?? []).filter((s: any) => !s.is_warmup)
             totalSets += workingSets.length
             workingSets.forEach((s: any) => {
-              totalVolume += (s.weight_kg ?? 0) * (s.reps ?? 0)
+              totalVolume += calcSetVolume(s.weight_kg, s.reps)
             })
           })
 
@@ -129,7 +123,7 @@ export function useWorkoutHistory() {
         // Build marked dates map for the calendar (one dot per workout day)
         const marks: MarkedDates = {}
         computed.forEach((w) => {
-          const dateKey = w.started_at.split('T')[0]
+          const dateKey = toDateKey(w.started_at)
           marks[dateKey] = { marked: true, dotColor: '#00D9C4' }
         })
 
@@ -188,7 +182,7 @@ export function useWorkoutHistory() {
           const workingSets = ex.sets.filter((s: any) => !s.is_warmup)
           totalSets += workingSets.length
           workingSets.forEach((s: any) => {
-            totalVolume += (s.weight_kg ?? 0) * (s.reps ?? 0)
+            totalVolume += calcSetVolume(s.weight_kg, s.reps)
           })
         })
 
