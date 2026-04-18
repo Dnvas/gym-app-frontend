@@ -20,6 +20,7 @@ import { HistoryStackParamList } from '../../navigation/MainNavigator'
 import { useWorkoutHistory, MarkedDates } from '../../hooks/useWorkoutHistory'
 import { WorkoutSummary } from '../../types/workout'
 import { formatDuration, formatShortDate, formatTime } from '../../utils/formatting'
+import { colors } from '../../theme'
 
 type HistoryScreenProps = {
   navigation: NativeStackNavigationProp<HistoryStackParamList, 'HistoryMain'>
@@ -65,7 +66,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
     calendarMarkedDates[selectedDate] = {
       ...(calendarMarkedDates[selectedDate] ?? {}),
       marked: calendarMarkedDates[selectedDate]?.marked ?? false,
-      dotColor: '#00D9C4',
+      dotColor: colors.accent,
       selected: true,
     }
   }
@@ -157,17 +158,17 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
               markingType="dot"
               style={styles.calendar}
               theme={{
-                backgroundColor: '#ffffff',
-                calendarBackground: '#ffffff',
-                todayTextColor: '#00D9C4',
-                arrowColor: '#1E3A5F',
-                selectedDayBackgroundColor: '#1E3A5F',
-                selectedDayTextColor: '#ffffff',
-                dotColor: '#00D9C4',
-                selectedDotColor: '#00D9C4',
-                dayTextColor: '#333',
-                textDisabledColor: '#ccc',
-                monthTextColor: '#1E3A5F',
+                backgroundColor: colors.surface,
+                calendarBackground: colors.surface,
+                todayTextColor: colors.accent,
+                arrowColor: colors.primary,
+                selectedDayBackgroundColor: colors.primary,
+                selectedDayTextColor: colors.surface,
+                dotColor: colors.accent,
+                selectedDotColor: colors.accent,
+                dayTextColor: colors.text.primary,
+                textDisabledColor: colors.text.faint,
+                monthTextColor: colors.primary,
                 textMonthFontWeight: '700',
                 textDayFontSize: 14,
                 textMonthFontSize: 16,
@@ -199,7 +200,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: 20,
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   calendar: {
     marginHorizontal: 12,
@@ -228,13 +229,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#333',
+    color: colors.text.primary,
   },
   listContent: {
     paddingBottom: 24,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     marginHorizontal: 16,
     marginBottom: 10,
@@ -254,13 +255,13 @@ const styles = StyleSheet.create({
   cardName: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#1E3A5F',
+    color: colors.primary,
     flex: 1,
     marginRight: 8,
   },
   cardDate: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: 12,
   },
   statsRow: {
@@ -274,12 +275,12 @@ const styles = StyleSheet.create({
   },
   statText: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
   },
   statDivider: {
     width: 1,
     height: 12,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
     marginHorizontal: 10,
   },
   emptyState: {
@@ -290,13 +291,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 12,
     textAlign: 'center',
   },
   emptySubtext: {
     fontSize: 13,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
     textAlign: 'center',
   },

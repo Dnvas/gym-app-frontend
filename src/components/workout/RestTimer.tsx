@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { colors } from '../../theme'
 
 interface RestTimerProps {
   visible: boolean
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     padding: 24,
     width: '85%',
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   closeButton: {
     padding: 4,
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 8,
     height: 90,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
     top: 0,
     left: 86,
     borderRadius: 4,
@@ -230,12 +231,12 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
     fontVariant: ['tabular-nums'],
   },
   timerLabel: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   adjustRow: {
@@ -247,13 +248,13 @@ const styles = StyleSheet.create({
   adjustButton: {
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
     borderRadius: 8,
   },
   adjustButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   pauseButton: {
     width: 56,
@@ -266,18 +267,18 @@ const styles = StyleSheet.create({
   skipButton: {
     paddingHorizontal: 32,
     paddingVertical: 14,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     marginBottom: 16,
   },
   skipButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 16,
     fontWeight: '600',
   },
   tip: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
     textAlign: 'center',
     paddingHorizontal: 16,
   },

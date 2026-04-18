@@ -5,6 +5,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native'
 
 import AuthNavigator from './AuthNavigator'
 import MainNavigator from './MainNavigator'
+import { colors } from '../theme'
 
 export default function RootNavigator() {
   const { isAuthenticated, loading } = useAuthContext()
@@ -30,6 +31,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
 })

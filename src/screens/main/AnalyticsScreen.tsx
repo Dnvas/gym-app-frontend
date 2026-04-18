@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import VolumeTab from '../../components/analytics/VolumeTab'
 import ProgressTab from '../../components/analytics/ProgressTab'
 import PRsTab from '../../components/analytics/PRsTab'
+import { colors } from '../../theme'
 
 type TabType = 'volume' | 'progress' | 'prs'
 
@@ -60,7 +61,7 @@ export default function AnalyticsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: 20,
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   tabBar: {
     flexDirection: 'row',
@@ -81,22 +82,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   tabActive: {
-    backgroundColor: '#1E3A5F',
-    borderColor: '#1E3A5F',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   tabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
   },
   tabTextActive: {
-    color: '#fff',
+    color: colors.surface,
   },
   content: {
     flex: 1,

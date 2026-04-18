@@ -22,6 +22,7 @@ import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import { WorkoutTemplateWithExercises, TemplateExercise, Exercise } from '../../types/workout'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 import { formatMuscleGroup, getMuscleColor } from '../../utils/formatting'
+import { colors } from '../../theme'
 
 type TemplateDetailScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'TemplateDetail'>
@@ -316,7 +317,7 @@ export default function TemplateDetailScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   systemBadge: {
     alignSelf: 'flex-start',
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
   },
   systemBadgeText: {
     fontSize: 11,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   headerActions: {
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   infoCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     borderRadius: 12,
     padding: 16,
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: 12,
     lineHeight: 20,
   },
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 14,
-    color: '#333',
+    color: colors.text.primary,
     fontWeight: '500',
   },
   exercisesSection: {
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     paddingHorizontal: 16,
     marginBottom: 12,
   },
@@ -410,7 +411,7 @@ const styles = StyleSheet.create({
   },
   exerciseCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 12,
     marginBottom: 10,
@@ -424,13 +425,13 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   exerciseIndexText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -440,7 +441,7 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 4,
   },
   exerciseMeta: {
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
   },
   exerciseEquipment: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
   },
   targetInfo: {
     flexDirection: 'row',
@@ -469,28 +470,28 @@ const styles = StyleSheet.create({
   },
   targetText: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
   restText: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
   },
   exerciseNotes: {
     fontSize: 12,
-    color: '#999',
+    color: colors.text.muted,
     fontStyle: 'italic',
     marginTop: 4,
   },
   footer: {
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: colors.border,
   },
   startButton: {
     flexDirection: 'row',
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -501,7 +502,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   startButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 18,
     fontWeight: '600',
   },

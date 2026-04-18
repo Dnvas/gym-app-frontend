@@ -19,6 +19,7 @@ import { useWorkoutContext } from '../../contexts/WorkoutContext'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import { supabase } from '../../lib/supabase'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
+import { colors } from '../../theme'
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'HomeMain'>
@@ -274,7 +275,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: 20,
@@ -284,18 +285,18 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   activeWorkoutBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     marginHorizontal: 20,
     marginBottom: 16,
     borderRadius: 12,
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
   },
   activeWorkoutTitle: {
     fontSize: 12,
@@ -319,25 +320,25 @@ const styles = StyleSheet.create({
   activeWorkoutName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: colors.surface,
   },
   continueButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
   },
   continueButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontWeight: '600',
     fontSize: 14,
   },
   statsCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 20,
     borderRadius: 16,
     padding: 20,
@@ -354,16 +355,16 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   statDivider: {
     width: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
     marginVertical: 5,
   },
   section: {
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     paddingHorizontal: 20,
     marginBottom: 12,
   },
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
   templateCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -405,7 +406,7 @@ const styles = StyleSheet.create({
   templateName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   systemBadge: {
     backgroundColor: '#e8f4f8',
@@ -415,17 +416,17 @@ const styles = StyleSheet.create({
   },
   systemBadgeText: {
     fontSize: 10,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   templateMeta: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   templateDescription: {
     fontSize: 13,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
   },
   loadingContainer: {
@@ -440,12 +441,12 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 12,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
   },
   fab: {
@@ -455,7 +456,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',

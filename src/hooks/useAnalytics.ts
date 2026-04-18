@@ -13,6 +13,7 @@ import {
   ExerciseForPR,
 } from '../types/analytics'
 import { MuscleGroup } from '../types/workout'
+import { VolumeViewRow, ProgressSetRow } from '../types/supabase'
 import { getWeekBoundaries, toDateKey } from '../utils/dateHelpers'
 import { calcPctChange } from '../utils/workoutCalculations'
 
@@ -60,9 +61,10 @@ export function useAnalytics() {
         // Aggregate by muscle group
         const muscleMap = new Map<MuscleGroup, MuscleVolumeData>()
         
-        currentData?.forEach((row: any) => {
-          const existing = muscleMap.get(row.muscle_group) || {
-            muscle_group: row.muscle_group,
+        currentData?.forEach((row: VolumeViewRow) => {
+          const muscle = row.muscle_group as MuscleGroup
+          const existing = muscleMap.get(muscle) || {
+            muscle_group: muscle,
             compound_sets: 0,
             isolation_sets: 0,
             compound_volume_kg: 0,
@@ -81,14 +83,15 @@ export function useAnalytics() {
           existing.total_sets = existing.compound_sets + existing.isolation_sets
           existing.total_volume_kg = existing.compound_volume_kg + existing.isolation_volume_kg
 
-          muscleMap.set(row.muscle_group, existing)
+          muscleMap.set(muscle, existing)
         })
 
         // Calculate previous week totals per muscle for comparison
         const prevMuscleMap = new Map<MuscleGroup, number>()
-        prevData?.forEach((row: any) => {
-          const existing = prevMuscleMap.get(row.muscle_group) || 0
-          prevMuscleMap.set(row.muscle_group, existing + row.total_sets)
+        prevData?.forEach((row: VolumeViewRow) => {
+          const muscle = row.muscle_group as MuscleGroup
+          const existing = prevMuscleMap.get(muscle) || 0
+          prevMuscleMap.set(muscle, existing + row.total_sets)
         })
 
         // Add change percentages
@@ -197,10 +200,12 @@ export function useAnalytics() {
         const dateMap = new Map<string, ProgressDataPoint>()
         let exerciseName = ''
 
-        data?.forEach((row: any) => {
+        data?.forEach((row: ProgressSetRow) => {
           if (!row.weight_kg || !row.reps) return
           
-          exerciseName = row.workout_exercise?.exercise?.name || ''
+          const we = Array.isArray(row.workout_exercise) ? row.workout_exercise[0] : row.workout_exercise
+          const ex = we && (Array.isArray(we.exercise) ? we.exercise[0] : we.exercise)
+          exerciseName = ex?.name || ''
           const dateKey = toDateKey(row.completed_at)
           const volume = row.weight_kg * row.reps
           

@@ -14,6 +14,7 @@ import { useAnalytics } from '../../hooks/useAnalytics'
 import { ExerciseProgressData, ProgressDataPoint } from '../../types/analytics'
 import { Exercise } from '../../types/workout'
 import { supabase } from '../../lib/supabase'
+import { colors } from '../../theme'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -313,23 +314,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
   },
   exerciseSelectorLabel: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: 4,
   },
   exerciseSelectorValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   exercisePickerDropdown: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     marginBottom: 12,
     maxHeight: 250,
@@ -351,15 +352,15 @@ const styles = StyleSheet.create({
   },
   exercisePickerItemText: {
     fontSize: 15,
-    color: '#333',
+    color: colors.text.primary,
   },
   exercisePickerItemTextSelected: {
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '600',
   },
   periodSelector: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 4,
     marginBottom: 12,
@@ -371,18 +372,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   periodButtonActive: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
   },
   periodButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
   },
   periodButtonTextActive: {
-    color: '#fff',
+    color: colors.surface,
   },
   chartCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
   chartTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 16,
   },
   loadingContainer: {
@@ -406,12 +407,12 @@ const styles = StyleSheet.create({
   emptyChartText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 12,
   },
   emptyChartSubtext: {
     fontSize: 13,
-    color: '#999',
+    color: colors.text.muted,
     marginTop: 4,
   },
   chartContainer: {
@@ -426,7 +427,7 @@ const styles = StyleSheet.create({
   },
   axisLabel: {
     fontSize: 11,
-    color: '#999',
+    color: colors.text.muted,
   },
   chartArea: {
     flex: 1,
@@ -437,7 +438,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
   },
   dataLayer: {
     position: 'absolute',
@@ -449,7 +450,7 @@ const styles = StyleSheet.create({
   lineSegment: {
     position: 'absolute',
     height: 2,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     transformOrigin: 'left center',
   },
   dataPoint: {
@@ -459,9 +460,9 @@ const styles = StyleSheet.create({
     marginLeft: -6,
     marginTop: -6,
     borderRadius: 6,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: '#1E3A5F',
+    borderColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -469,7 +470,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
   },
   prCard: {
     backgroundColor: '#fffbeb',
@@ -501,11 +502,11 @@ const styles = StyleSheet.create({
   prWeight: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   prUnit: {
     fontSize: 18,
-    color: '#1E3A5F',
+    color: colors.primary,
     marginLeft: 4,
   },
   prDetails: {
@@ -514,22 +515,22 @@ const styles = StyleSheet.create({
   prReps: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#333',
+    color: colors.text.primary,
   },
   prDate: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 2,
   },
   recentCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
   },
   recentTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 12,
   },
   recentRow: {
@@ -537,15 +538,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   recentDate: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
   },
   recentValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
 })

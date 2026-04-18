@@ -26,6 +26,7 @@ import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import ExercisePickerModal from '../../components/workout/ExercisePickerModal'
 import { Exercise, TemplateExerciseFormData } from '../../types/workout'
 import { formatMuscleGroup } from '../../utils/formatting'
+import { colors } from '../../theme'
 
 type TemplateFormScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'TemplateForm'>
@@ -136,7 +137,7 @@ function ExerciseConfigCard({
             hitSlop={6}
             style={styles.reorderBtn}
           >
-            <Ionicons name="chevron-up" size={20} color={index === 0 ? '#ddd' : '#666'} />
+            <Ionicons name="chevron-up" size={20} color={index === 0 ? colors.text.faint : colors.text.secondary} />
           </TouchableOpacity>
           <TouchableOpacity
             testID={`move-down-${index}`}
@@ -145,7 +146,7 @@ function ExerciseConfigCard({
             hitSlop={6}
             style={styles.reorderBtn}
           >
-            <Ionicons name="chevron-down" size={20} color={index === total - 1 ? '#ddd' : '#666'} />
+            <Ionicons name="chevron-down" size={20} color={index === total - 1 ? colors.text.faint : colors.text.secondary} />
           </TouchableOpacity>
           <TouchableOpacity onPress={onRemove} hitSlop={6} style={styles.removeBtn}>
             <Ionicons name="trash-outline" size={18} color="#e74c3c" />
@@ -476,7 +477,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -489,7 +490,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   loadingContainer: {
     flex: 1,
@@ -505,7 +506,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#999',
+    color: colors.text.muted,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
     paddingHorizontal: 16,
@@ -513,7 +514,7 @@ const styles = StyleSheet.create({
   },
   // Details card
   detailsCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     borderRadius: 12,
     paddingHorizontal: 16,
@@ -527,31 +528,31 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#999',
+    color: colors.text.muted,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
     marginBottom: 6,
   },
   nameInput: {
     fontSize: 16,
-    color: '#333',
+    color: colors.text.primary,
     paddingVertical: 4,
   },
   fieldSeparator: {
     height: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
     marginVertical: 14,
   },
   descriptionInput: {
     fontSize: 15,
-    color: '#333',
+    color: colors.text.primary,
     paddingVertical: 4,
     minHeight: 56,
     textAlignVertical: 'top',
   },
   // Exercise cards
   exerciseCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginBottom: 10,
     borderRadius: 12,
@@ -571,13 +572,13 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
   },
   exerciseOrderText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -588,18 +589,18 @@ const styles = StyleSheet.create({
   exerciseCardName: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   muscleBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.borderLight,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 4,
   },
   muscleBadgeText: {
     fontSize: 11,
-    color: '#666',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
   exerciseCardActions: {
@@ -618,7 +619,7 @@ const styles = StyleSheet.create({
   configRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: colors.borderLight,
     borderRadius: 8,
     padding: 10,
   },
@@ -630,24 +631,24 @@ const styles = StyleSheet.create({
   configLabel: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#999',
+    color: colors.text.muted,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
   configInput: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
     textAlign: 'center',
     minWidth: 36,
     paddingVertical: 2,
     borderBottomWidth: 1.5,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   configDivider: {
     width: 1,
     height: 36,
-    backgroundColor: '#e8e8e8',
+    backgroundColor: colors.border,
   },
   // Add exercise button
   addExerciseButton: {
@@ -661,24 +662,24 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: '#1E3A5F',
-    backgroundColor: '#f0f4f8',
+    borderColor: colors.primary,
+    backgroundColor: colors.background,
   },
   addExerciseText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   // Footer
   footer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
     borderTopWidth: 1,
-    borderTopColor: '#e8e8e8',
+    borderTopColor: colors.border,
   },
   saveButton: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -687,7 +688,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   saveButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 16,
     fontWeight: '700',
   },

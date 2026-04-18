@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { colors } from '../../theme'
 
 export default function ProfileScreen() {
   const { profile, user, signOut, updateProfile, loading } = useAuthContext()
@@ -211,7 +212,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -224,13 +225,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   editButton: {
     padding: 8,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     marginHorizontal: 20,
     marginBottom: 16,
     borderRadius: 16,
@@ -249,14 +250,14 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   avatarText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.surface,
   },
   profileInfo: {
     alignItems: 'center',
@@ -264,11 +265,11 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   email: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   badge: {
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 12,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   editForm: {
@@ -292,17 +293,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 12,
     padding: 14,
     fontSize: 16,
-    color: '#333',
+    color: colors.text.primary,
   },
   unitSelector: {
     flexDirection: 'row',
@@ -313,19 +314,19 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     alignItems: 'center',
   },
   unitOptionSelected: {
-    borderColor: '#1E3A5F',
+    borderColor: colors.primary,
     backgroundColor: '#e8f4f8',
   },
   unitOptionText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
   },
   unitOptionTextSelected: {
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '600',
   },
   editActions: {
@@ -338,19 +339,19 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     alignItems: 'center',
   },
   cancelButtonText: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     fontWeight: '600',
   },
   saveButton: {
     flex: 1,
     padding: 14,
     borderRadius: 12,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     alignItems: 'center',
   },
   saveButtonDisabled: {
@@ -358,13 +359,13 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 16,
-    color: '#fff',
+    color: colors.surface,
     fontWeight: '600',
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 16,
   },
   statsGrid: {
@@ -379,11 +380,11 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   signOutButton: {
@@ -394,19 +395,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 8,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#dc3545',
+    borderColor: colors.error,
   },
   signOutText: {
     fontSize: 16,
-    color: '#dc3545',
+    color: colors.error,
     fontWeight: '600',
   },
   version: {
     textAlign: 'center',
-    color: '#999',
+    color: colors.text.muted,
     fontSize: 12,
     marginTop: 24,
     marginBottom: 40,

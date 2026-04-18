@@ -17,6 +17,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 import { supabase } from '../../lib/supabase'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
+import { WorkoutExerciseRow, WorkoutSetRow, PRRow } from '../../types/supabase'
+import { colors } from '../../theme'
 
 type WorkoutSummaryScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'WorkoutSummary'>
@@ -79,14 +81,14 @@ export default function WorkoutSummaryScreen({
       let totalSets = 0
       let totalVolume = 0
       
-      const exerciseStats = exercises.map((we: any) => {
-        const workingSets = (we.sets ?? []).filter((s: any) => !s.is_warmup)
+      const exerciseStats = exercises.map((we: WorkoutExerciseRow) => {
+        const workingSets = (we.sets ?? []).filter((s: WorkoutSetRow) => !s.is_warmup)
         totalSets += workingSets.length
-        
+
         let bestSet = null
         let bestVolume = 0
-        
-        workingSets.forEach((s: any) => {
+
+        workingSets.forEach((s: WorkoutSetRow) => {
           const volume = (s.weight_kg ?? 0) * (s.reps ?? 0)
           totalVolume += volume
           if (volume > bestVolume) {
@@ -118,8 +120,8 @@ export default function WorkoutSummaryScreen({
         .gte('achieved_at', workout.started_at)
         .lte('achieved_at', workout.completed_at ?? new Date().toISOString())
 
-      const newPRs = (prs ?? []).map((pr: any) => ({
-        exerciseName: pr.exercise?.name ?? 'Unknown',
+      const newPRs = (prs ?? []).map((pr) => ({
+        exerciseName: (pr.exercise as Array<{ name: string }>)?.[0]?.name ?? 'Unknown',
         weight: pr.weight_kg,
         reps: pr.reps,
       }))
@@ -269,7 +271,7 @@ export default function WorkoutSummaryScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
@@ -283,13 +285,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 32,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
   },
   checkCircle: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#00D9C4',
+    backgroundColor: colors.accent,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -297,17 +299,17 @@ const styles = StyleSheet.create({
   successTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 4,
   },
   workoutName: {
     fontSize: 18,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '600',
   },
   timeRange: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   prSection: {
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
   prExercise: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#333',
+    color: colors.text.primary,
   },
   prValue: {
     fontSize: 14,
@@ -359,7 +361,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   statCardInner: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -367,12 +369,12 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   exerciseSection: {
@@ -382,14 +384,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 12,
   },
   exerciseRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 14,
     marginBottom: 8,
@@ -400,11 +402,11 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
   },
   exerciseSets: {
     fontSize: 13,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 2,
   },
   bestSetBadge: {
@@ -415,19 +417,19 @@ const styles = StyleSheet.create({
   },
   bestSetText: {
     fontSize: 12,
-    color: '#1E3A5F',
+    color: colors.primary,
     fontWeight: '500',
   },
   doneButton: {
     marginHorizontal: 16,
     marginTop: 24,
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   doneButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 18,
     fontWeight: '600',
   },

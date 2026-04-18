@@ -13,6 +13,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { AuthStackParamList } from '../../navigation/AuthNavigator'
+import { colors } from '../../theme'
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<AuthStackParamList, 'Login'>
@@ -109,7 +110,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: colors.background,
   },
   content: {
     flex: 1,
@@ -122,12 +123,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#1E3A5F',
+    color: colors.primary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 18,
-    color: '#666',
+    color: colors.text.secondary,
   },
   form: {
     marginBottom: 24,
@@ -138,20 +139,20 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    color: '#333',
+    color: colors.text.primary,
   },
   button: {
-    backgroundColor: '#1E3A5F',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -172,11 +173,11 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   footerText: {
-    color: '#666',
+    color: colors.text.secondary,
     fontSize: 14,
   },
   footerLink: {
-    color: '#1E3A5F',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '600',
   },
