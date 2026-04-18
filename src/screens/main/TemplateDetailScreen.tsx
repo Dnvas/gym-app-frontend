@@ -1,6 +1,6 @@
 // src/screens/main/TemplateDetailScreen.tsx
 // SEDP-37: Template detail/preview screen
-import React, { useEffect, useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   View,
   Text,
@@ -14,8 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { supabase } from '../../lib/supabase'
+import { useAuthContext } from '../../contexts/AuthContext'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
+import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import { WorkoutTemplateWithExercises, TemplateExercise, Exercise } from '../../types/workout'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 
@@ -24,7 +27,6 @@ type TemplateDetailScreenProps = {
   route: RouteProp<HomeStackParamList, 'TemplateDetail'>
 }
 
-// Helper to format muscle group for display
 function formatMuscleGroup(muscle: string): string {
   return muscle
     .split('_')
@@ -32,7 +34,6 @@ function formatMuscleGroup(muscle: string): string {
     .join(' ')
 }
 
-// Helper to get muscle group color
 function getMuscleColor(muscle: string): string {
   const colors: Record<string, string> = {
     chest: '#e74c3c',
@@ -59,15 +60,20 @@ export default function TemplateDetailScreen({
   route,
 }: TemplateDetailScreenProps) {
   const { templateId } = route.params
+  const { profile } = useAuthContext()
   const { startWorkout, isActive, loading: workoutLoading } = useWorkoutContext()
-  
+  const { deleteTemplate } = useTemplateManagement()
+
   const [template, setTemplate] = useState<WorkoutTemplateWithExercises | null>(null)
   const [loading, setLoading] = useState(true)
   const [starting, setStarting] = useState(false)
 
-  useEffect(() => {
-    fetchTemplate()
-  }, [templateId])
+  // Re-fetch on every focus so edits made in TemplateFormScreen are reflected
+  useFocusEffect(
+    useCallback(() => {
+      fetchTemplate()
+    }, [templateId])
+  )
 
   async function fetchTemplate() {
     try {
@@ -85,9 +91,8 @@ export default function TemplateDetailScreen({
 
       if (error) throw error
 
-      // Sort exercises by order_index
       if (data?.template_exercises) {
-        data.template_exercises.sort((a: TemplateExercise, b: TemplateExercise) => 
+        data.template_exercises.sort((a: TemplateExercise, b: TemplateExercise) =>
           a.order_index - b.order_index
         )
       }
@@ -100,6 +105,35 @@ export default function TemplateDetailScreen({
     } finally {
       setLoading(false)
     }
+  }
+
+  const isOwnTemplate =
+    !!template && template.created_by !== null && template.created_by === profile?.id
+
+  function handleEdit() {
+    navigation.navigate('TemplateForm', { templateId: template!.id })
+  }
+
+  function handleDeletePress() {
+    Alert.alert(
+      'Delete Template',
+      `Delete "${template!.name}"? This cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deleteTemplate(template!.id)
+            if (result.success) {
+              navigation.goBack()
+            } else {
+              Alert.alert('Error', result.error ?? 'Failed to delete template')
+            }
+          },
+        },
+      ]
+    )
   }
 
   async function handleStartWorkout() {
@@ -180,7 +214,7 @@ export default function TemplateDetailScreen({
               {item.target_reps && ` × ${item.target_reps} reps`}
               {item.target_rpe && ` @ RPE ${item.target_rpe}`}
             </Text>
-            {item.rest_seconds && (
+            {item.rest_seconds > 0 && (
               <Text style={styles.restText}>
                 {Math.floor(item.rest_seconds / 60)}:{(item.rest_seconds % 60).toString().padStart(2, '0')} rest
               </Text>
@@ -223,10 +257,7 @@ export default function TemplateDetailScreen({
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#1E3A5F" />
         </TouchableOpacity>
         <View style={styles.headerContent}>
@@ -237,6 +268,16 @@ export default function TemplateDetailScreen({
             </View>
           )}
         </View>
+        {isOwnTemplate && (
+          <View style={styles.headerActions}>
+            <TouchableOpacity onPress={handleEdit} style={styles.headerActionBtn} hitSlop={6}>
+              <Ionicons name="create-outline" size={22} color="#1E3A5F" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDeletePress} style={styles.headerActionBtn} hitSlop={6}>
+              <Ionicons name="trash-outline" size={22} color="#e74c3c" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {/* Template Info */}
@@ -339,6 +380,14 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#1E3A5F',
     fontWeight: '500',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  headerActionBtn: {
+    padding: 8,
   },
   infoCard: {
     backgroundColor: '#fff',
