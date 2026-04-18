@@ -19,30 +19,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { HistoryStackParamList } from '../../navigation/MainNavigator'
 import { useWorkoutHistory, MarkedDates } from '../../hooks/useWorkoutHistory'
 import { WorkoutSummary } from '../../types/workout'
+import { formatDuration, formatShortDate, formatTime } from '../../utils/formatting'
 
 type HistoryScreenProps = {
   navigation: NativeStackNavigationProp<HistoryStackParamList, 'HistoryMain'>
-}
-
-function formatDuration(minutes: number | null): string {
-  if (minutes === null) return '-'
-  const hrs = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  return hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`
-}
-
-function formatWorkoutDate(isoString: string): string {
-  const date = new Date(isoString)
-  return date.toLocaleDateString('en-GB', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  })
-}
-
-function formatWorkoutTime(isoString: string): string {
-  const date = new Date(isoString)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
 export default function HistoryScreen({ navigation }: HistoryScreenProps) {
@@ -110,7 +90,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
         </View>
 
         <Text style={styles.cardDate}>
-          {formatWorkoutDate(item.started_at)} · {formatWorkoutTime(item.started_at)}
+          {formatShortDate(item.started_at)} · {formatTime(item.started_at)}
         </Text>
 
         <View style={styles.statsRow}>

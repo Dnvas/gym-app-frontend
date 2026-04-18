@@ -4,15 +4,7 @@ import { useState, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuthContext } from '../contexts/AuthContext'
 import { WorkoutTemplateWithExercises, TemplateExercise, TemplateExerciseFormData } from '../types/workout'
-
-function calcEstimatedDuration(exercises: TemplateExerciseFormData[]): number {
-  // Per exercise: target_sets × (2 min of work + rest between sets)
-  const total = exercises.reduce(
-    (acc, e) => acc + e.target_sets * (2 + e.rest_seconds / 60),
-    0
-  )
-  return Math.round(total)
-}
+import { calcEstimatedDuration } from '../utils/workoutCalculations'
 
 export function useTemplateManagement() {
   const { user } = useAuthContext()

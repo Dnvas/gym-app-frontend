@@ -25,17 +25,11 @@ import { HomeStackParamList } from '../../navigation/MainNavigator'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import ExercisePickerModal from '../../components/workout/ExercisePickerModal'
 import { Exercise, TemplateExerciseFormData } from '../../types/workout'
+import { formatMuscleGroup } from '../../utils/formatting'
 
 type TemplateFormScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'TemplateForm'>
   route: RouteProp<HomeStackParamList, 'TemplateForm'>
-}
-
-function formatMuscleGroup(muscle: string): string {
-  return muscle
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
 }
 
 function makeTempId(): string {
