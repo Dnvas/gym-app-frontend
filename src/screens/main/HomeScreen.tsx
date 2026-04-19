@@ -18,9 +18,15 @@ import { useAuthContext } from '../../contexts/AuthContext'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
 import { useToast } from '../../contexts/ToastContext'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
+import { useAnalytics, HomeStats } from '../../hooks/useAnalytics'
 import { supabase } from '../../lib/supabase'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 import { colors } from '../../theme'
+
+function formatVolume(kg: number): string {
+  if (kg >= 1000) return `${(kg / 1000).toFixed(1)}k`
+  return kg.toString()
+}
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, 'HomeMain'>
@@ -40,15 +46,18 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { isActive, workout } = useWorkoutContext()
   const { deleteTemplate } = useTemplateManagement()
   const { showError } = useToast()
+  const { fetchHomeStats } = useAnalytics()
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [stats, setStats] = useState<HomeStats>({ thisWeekWorkouts: 0, thisWeekVolumeKg: 0, prsThisMonth: 0 })
 
-  // Refresh list each time this screen comes into focus (covers create/edit returns)
+  // Refresh list and stats each time this screen comes into focus
   useFocusEffect(
     useCallback(() => {
       fetchTemplates()
-    }, [])
+      fetchHomeStats().then(setStats)
+    }, [fetchHomeStats])
   )
 
   async function fetchTemplates() {
@@ -84,6 +93,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   function onRefresh() {
     setRefreshing(true)
     fetchTemplates()
+    fetchHomeStats().then(setStats)
   }
 
   function getGreeting() {
@@ -212,17 +222,17 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
       {/* Quick Stats Card */}
       <View style={styles.statsCard}>
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>0</Text>
+          <Text style={styles.statNumber}>{stats.thisWeekWorkouts}</Text>
           <Text style={styles.statLabel}>This Week</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>0</Text>
-          <Text style={styles.statLabel}>Total Volume</Text>
+          <Text style={styles.statNumber}>{formatVolume(stats.thisWeekVolumeKg)} kg</Text>
+          <Text style={styles.statLabel}>Week Volume</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>0</Text>
+          <Text style={styles.statNumber}>{stats.prsThisMonth}</Text>
           <Text style={styles.statLabel}>PRs This Month</Text>
         </View>
       </View>

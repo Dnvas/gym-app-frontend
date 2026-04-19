@@ -6,11 +6,11 @@
 //   const { mockSupabaseResponse, resetMockQueue, mockFrom, mockChain } =
 //     jest.requireMock('../../lib/supabase') as typeof import('./supabase')
 
-type MockResponse = { data: any; error: any }
+type MockResponse = { data: any; error: any; count?: number | null }
 const _queue: MockResponse[] = []
 
-export function mockSupabaseResponse(data: any, error: any = null) {
-  _queue.push({ data, error })
+export function mockSupabaseResponse(data: any, error: any = null, count: number | null = null) {
+  _queue.push({ data, error, count })
 }
 
 export function resetMockQueue() {

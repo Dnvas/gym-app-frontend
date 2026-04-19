@@ -162,6 +162,81 @@ describe('fetchGroupedPRs', () => {
   })
 })
 
+describe('fetchHomeStats', () => {
+  it('returns correct counts from three parallel queries', async () => {
+    // workouts count, volume rows, PRs count
+    mockSupabaseResponse(null, null, 3)                            // thisWeekWorkouts = 3
+    mockSupabaseResponse([{ total_volume_kg: 2500 }, { total_volume_kg: 1800 }]) // thisWeekVolumeKg = 4300
+    mockSupabaseResponse(null, null, 2)                            // prsThisMonth = 2
+
+    const { result } = renderHook(() => useAnalytics())
+    let stats: any
+    await act(async () => {
+      stats = await result.current.fetchHomeStats()
+    })
+
+    expect(stats.thisWeekWorkouts).toBe(3)
+    expect(stats.thisWeekVolumeKg).toBe(4300)
+    expect(stats.prsThisMonth).toBe(2)
+  })
+
+  it('returns all zeros when not authenticated', async () => {
+    mockUseAuthContext.mockReturnValueOnce({ user: null })
+
+    const { result } = renderHook(() => useAnalytics())
+    let stats: any
+    await act(async () => {
+      stats = await result.current.fetchHomeStats()
+    })
+
+    expect(stats).toEqual({ thisWeekWorkouts: 0, thisWeekVolumeKg: 0, prsThisMonth: 0 })
+  })
+
+  it('returns zeros and does not throw on query error', async () => {
+    mockSupabaseResponse(null, new Error('db error'))
+    mockSupabaseResponse(null, new Error('db error'))
+    mockSupabaseResponse(null, new Error('db error'))
+
+    const { result } = renderHook(() => useAnalytics())
+    let stats: any
+    await act(async () => {
+      stats = await result.current.fetchHomeStats()
+    })
+
+    expect(stats).toEqual({ thisWeekWorkouts: 0, thisWeekVolumeKg: 0, prsThisMonth: 0 })
+  })
+})
+
+describe('fetchProfileStats', () => {
+  it('returns aggregated profile stats', async () => {
+    mockSupabaseResponse(null, null, 25)                           // totalWorkouts = 25
+    mockSupabaseResponse(null, null, 12)                           // prsAchieved = 12
+    mockSupabaseResponse([{ total_volume_kg: 50000 }, { total_volume_kg: 30000 }]) // totalVolumeKg = 80000
+
+    const { result } = renderHook(() => useAnalytics())
+    let stats: any
+    await act(async () => {
+      stats = await result.current.fetchProfileStats()
+    })
+
+    expect(stats.totalWorkouts).toBe(25)
+    expect(stats.prsAchieved).toBe(12)
+    expect(stats.totalVolumeKg).toBe(80000)
+  })
+
+  it('returns zeros when not authenticated', async () => {
+    mockUseAuthContext.mockReturnValueOnce({ user: null })
+
+    const { result } = renderHook(() => useAnalytics())
+    let stats: any
+    await act(async () => {
+      stats = await result.current.fetchProfileStats()
+    })
+
+    expect(stats).toEqual({ totalWorkouts: 0, totalVolumeKg: 0, prsAchieved: 0 })
+  })
+})
+
 describe('fetchExerciseProgress', () => {
   it('keeps only the heaviest weight per day', async () => {
     // Two sets on the same day — different weights
