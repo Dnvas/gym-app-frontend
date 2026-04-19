@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp, useFocusEffect } from '@react-navigation/native'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
+import { useToast } from '../../contexts/ToastContext'
 import { WorkoutExercise, Exercise } from '../../types/workout'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 import SetInputCard from '../../components/workout/SetInputCard'
@@ -44,6 +45,7 @@ export default function ActiveWorkoutScreen({
     abandonWorkout,
     getWorkoutStats,
   } = useWorkoutContext()
+  const { showError } = useToast()
 
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
@@ -170,7 +172,7 @@ export default function ActiveWorkoutScreen({
     if (success && completedWorkout) {
       navigation.replace('WorkoutSummary', { workoutId: completedWorkout.id })
     } else {
-      Alert.alert('Error', error || 'Failed to complete workout')
+      showError(typeof error === 'string' ? error : 'Failed to complete workout')
     }
   }
 

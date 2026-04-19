@@ -23,6 +23,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
+import { useToast } from '../../contexts/ToastContext'
 import ExercisePickerModal from '../../components/workout/ExercisePickerModal'
 import { Exercise, TemplateExerciseFormData } from '../../types/workout'
 import { formatMuscleGroup } from '../../utils/formatting'
@@ -136,6 +137,8 @@ function ExerciseConfigCard({
             disabled={index === 0}
             hitSlop={6}
             style={styles.reorderBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Move exercise up"
           >
             <Ionicons name="chevron-up" size={20} color={index === 0 ? colors.text.faint : colors.text.secondary} />
           </TouchableOpacity>
@@ -145,10 +148,12 @@ function ExerciseConfigCard({
             disabled={index === total - 1}
             hitSlop={6}
             style={styles.reorderBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Move exercise down"
           >
             <Ionicons name="chevron-down" size={20} color={index === total - 1 ? colors.text.faint : colors.text.secondary} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={onRemove} hitSlop={6} style={styles.removeBtn}>
+          <TouchableOpacity onPress={onRemove} hitSlop={6} style={styles.removeBtn} accessibilityRole="button" accessibilityLabel="Remove exercise" accessibilityHint="Removes this exercise from the template">
             <Ionicons name="trash-outline" size={18} color="#e74c3c" />
           </TouchableOpacity>
         </View>
@@ -227,6 +232,7 @@ export default function TemplateFormScreen({
 
   const { loading, createTemplate, updateTemplate, fetchTemplateForEdit } =
     useTemplateManagement()
+  const { showError } = useToast()
 
   const [initLoading, setInitLoading] = useState(isEditMode)
   const [name, setName] = useState('')
@@ -332,14 +338,14 @@ export default function TemplateFormScreen({
       if (result.success) {
         navigation.goBack()
       } else {
-        Alert.alert('Error', result.error ?? 'Failed to update template')
+        showError(result.error ?? 'Failed to update template')
       }
     } else {
       const result = await createTemplate(trimmedName, desc, exercises)
       if (result.success) {
         navigation.goBack()
       } else {
-        Alert.alert('Error', result.error ?? 'Failed to create template')
+        showError(result.error ?? 'Failed to create template')
       }
     }
   }
@@ -348,7 +354,7 @@ export default function TemplateFormScreen({
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
+          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} accessibilityRole="button" accessibilityLabel="Go back">
             <Ionicons name="arrow-back" size={24} color="#1E3A5F" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Edit Template</Text>

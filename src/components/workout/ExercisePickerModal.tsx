@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../../lib/supabase'
 import { Exercise, MuscleGroup } from '../../types/workout'
 import { formatMuscleGroup } from '../../utils/formatting'
+import { useToast } from '../../contexts/ToastContext'
 import { colors } from '../../theme'
 
 interface ExercisePickerModalProps {
@@ -39,6 +40,7 @@ export default function ExercisePickerModal({
   onSelect,
   excludeExerciseIds = [],
 }: ExercisePickerModalProps) {
+  const { showError } = useToast()
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([])
   const [loading, setLoading] = useState(true)
@@ -81,7 +83,7 @@ export default function ExercisePickerModal({
       if (error) throw error
       setExercises(data ?? [])
     } catch (err) {
-      console.error('Error fetching exercises:', err)
+      showError('Failed to load exercises')
     } finally {
       setLoading(false)
     }

@@ -12,10 +12,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { useToast } from '../../contexts/ToastContext'
 import { colors } from '../../theme'
 
 export default function ProfileScreen() {
   const { profile, user, signOut, updateProfile, loading } = useAuthContext()
+  const { showError } = useToast()
   const [isEditing, setIsEditing] = useState(false)
   const [username, setUsername] = useState(profile?.username ?? '')
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>(
@@ -45,7 +47,7 @@ export default function ProfileScreen() {
       setIsEditing(false)
       Alert.alert('Success', 'Profile updated successfully')
     } else {
-      Alert.alert('Error', error ?? 'Failed to update profile')
+      showError(error ?? 'Failed to update profile')
     }
   }
 

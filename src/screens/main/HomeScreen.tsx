@@ -16,6 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
+import { useToast } from '../../contexts/ToastContext'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
 import { supabase } from '../../lib/supabase'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
@@ -38,6 +39,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { profile } = useAuthContext()
   const { isActive, workout } = useWorkoutContext()
   const { deleteTemplate } = useTemplateManagement()
+  const { showError } = useToast()
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -72,7 +74,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
       setTemplates(templatesWithCount)
     } catch (error) {
-      console.error('Error fetching templates:', error)
+      showError('Failed to load templates')
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -127,7 +129,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
             if (result.success) {
               fetchTemplates()
             } else {
-              Alert.alert('Error', result.error ?? 'Failed to delete template')
+              showError(result.error ?? 'Failed to delete template')
             }
           },
         },
@@ -265,6 +267,8 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         style={styles.fab}
         onPress={() => navigation.navigate('TemplateForm', {})}
         activeOpacity={0.8}
+        accessibilityRole="button"
+        accessibilityLabel="Create new template"
       >
         <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>

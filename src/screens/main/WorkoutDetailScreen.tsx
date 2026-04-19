@@ -53,7 +53,7 @@ export default function WorkoutDetailScreen({
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
+          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} accessibilityRole="button" accessibilityLabel="Go back">
             <Ionicons name="arrow-back" size={24} color="#1E3A5F" />
           </TouchableOpacity>
         </View>
@@ -68,7 +68,7 @@ export default function WorkoutDetailScreen({
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
+          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} accessibilityRole="button" accessibilityLabel="Go back">
             <Ionicons name="arrow-back" size={24} color="#1E3A5F" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Workout Detail</Text>

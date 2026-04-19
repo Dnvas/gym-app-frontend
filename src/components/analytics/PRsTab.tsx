@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useAnalytics } from '../../hooks/useAnalytics'
+import { useToast } from '../../contexts/ToastContext'
 import { GroupedPRsData, PRRecord, ExerciseForPR } from '../../types/analytics'
 import { MuscleGroup } from '../../types/workout'
 import { colors } from '../../theme'
@@ -48,6 +49,7 @@ type BigThreeType = 'squat' | 'bench' | 'deadlift'
 
 export default function PRsTab() {
   const { fetchGroupedPRs, addManualPR, fetchExercisesForPR, loading } = useAnalytics()
+  const { showError } = useToast()
   const [prsData, setPrsData] = useState<GroupedPRsData | null>(null)
   const [refreshing, setRefreshing] = useState(false)
   const [showAddModal, setShowAddModal] = useState(false)
@@ -142,7 +144,7 @@ export default function PRsTab() {
       await loadPRs()
       Alert.alert('Success', 'PR added successfully!')
     } else {
-      Alert.alert('Error', error || 'Failed to add PR')
+      showError(typeof error === 'string' ? error : 'Failed to add PR')
     }
   }
 

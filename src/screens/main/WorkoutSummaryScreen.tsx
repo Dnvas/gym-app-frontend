@@ -18,6 +18,7 @@ import { RouteProp } from '@react-navigation/native'
 import { supabase } from '../../lib/supabase'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 import { WorkoutExerciseRow, WorkoutSetRow, PRRow } from '../../types/supabase'
+import { useToast } from '../../contexts/ToastContext'
 import { colors } from '../../theme'
 
 type WorkoutSummaryScreenProps = {
@@ -50,6 +51,7 @@ export default function WorkoutSummaryScreen({
   route,
 }: WorkoutSummaryScreenProps) {
   const { workoutId } = route.params
+  const { showError } = useToast()
   const [stats, setStats] = useState<WorkoutStats | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -138,7 +140,7 @@ export default function WorkoutSummaryScreen({
         newPRs,
       })
     } catch (error) {
-      console.error('Error fetching workout stats:', error)
+      showError('Failed to load workout summary')
     } finally {
       setLoading(false)
     }
