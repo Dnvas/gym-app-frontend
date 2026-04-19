@@ -17,6 +17,10 @@ import { supabase } from '../../lib/supabase'
 import { colors } from '../../theme'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
+const CHART_HEIGHT = 200
+const Y_AXIS_WIDTH = 40
+// card padding (16) × 2 sides + scroll padding (16) × 2 sides + y-axis width
+const CHART_WIDTH = SCREEN_WIDTH - 64 - Y_AXIS_WIDTH
 
 type PeriodType = '1M' | '3M' | '6M' | 'ALL'
 
@@ -27,30 +31,30 @@ export default function ProgressTab() {
   const [showExercisePicker, setShowExercisePicker] = useState(false)
   const [period, setPeriod] = useState<PeriodType>('3M')
   const [progressData, setProgressData] = useState<ExerciseProgressData | null>(null)
+  const [selectedPoint, setSelectedPoint] = useState<ProgressDataPoint | null>(null)
 
-  // Fetch exercises on mount
   useEffect(() => {
     async function loadExercises() {
       const { data } = await supabase
         .from('exercises')
         .select('*')
-        .eq('is_compound', true) // Default to compound exercises
+        .eq('is_compound', true)
         .order('name')
-      
+
       if (data && data.length > 0) {
         setExercises(data)
-        // Default to first compound (likely Barbell Bench Press or similar)
-        const defaultExercise = data.find(e => 
-          e.name.toLowerCase().includes('bench press') ||
-          e.name.toLowerCase().includes('squat')
-        ) || data[0]
+        const defaultExercise =
+          data.find(
+            e =>
+              e.name.toLowerCase().includes('bench press') ||
+              e.name.toLowerCase().includes('squat')
+          ) || data[0]
         setSelectedExercise(defaultExercise)
       }
     }
     loadExercises()
   }, [])
 
-  // Fetch progress when exercise or period changes
   useEffect(() => {
     if (selectedExercise) {
       loadProgress()
@@ -59,6 +63,7 @@ export default function ProgressTab() {
 
   const loadProgress = useCallback(async () => {
     if (!selectedExercise) return
+    setSelectedPoint(null)
     const data = await fetchExerciseProgress(selectedExercise.id, period)
     setProgressData(data)
   }, [selectedExercise, period, fetchExerciseProgress])
@@ -68,6 +73,21 @@ export default function ProgressTab() {
     return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
   }
 
+  function formatDateLong(dateStr: string): string {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  }
+
+  // Returns up to 5 evenly spaced indices for X axis labels
+  function getXLabelIndices(count: number): number[] {
+    if (count === 0) return []
+    if (count <= 5) return Array.from({ length: count }, (_, i) => i)
+    const indices = new Set([0, count - 1])
+    const step = (count - 1) / 4
+    for (let i = 1; i <= 3; i++) indices.add(Math.round(step * i))
+    return Array.from(indices).sort((a, b) => a - b)
+  }
+
   function getChartData() {
     if (!progressData?.data_points.length) return null
 
@@ -75,8 +95,7 @@ export default function ProgressTab() {
     const weights = points.map(p => p.weight_kg)
     const minWeight = Math.min(...weights)
     const maxWeight = Math.max(...weights)
-    
-    // Add 10% padding, minimum 5kg range
+
     const range = Math.max(maxWeight - minWeight, 5)
     const padding = range * 0.15
 
@@ -92,7 +111,7 @@ export default function ProgressTab() {
     if (!chartData) {
       return (
         <View style={styles.emptyChart}>
-          <Ionicons name="analytics-outline" size={48} color="#ccc" />
+          <Ionicons name="analytics-outline" size={48} color={colors.text.faint} />
           <Text style={styles.emptyChartText}>No data for this period</Text>
           <Text style={styles.emptyChartSubtext}>
             Complete more workouts to see your progress
@@ -103,76 +122,124 @@ export default function ProgressTab() {
 
     const { points, minWeight, maxWeight } = chartData
     const weightRange = maxWeight - minWeight
-    const chartWidth = SCREEN_WIDTH - 100 // More padding for y-axis labels
-    const chartHeight = 180
-    const pointSpacing = points.length > 1 ? chartWidth / (points.length - 1) : chartWidth / 2
+
+    function getXY(index: number) {
+      const x = points.length > 1 ? index * (CHART_WIDTH / (points.length - 1)) : CHART_WIDTH / 2
+      const yPercent = weightRange > 0 ? (points[index].weight_kg - minWeight) / weightRange : 0.5
+      // 10px top/bottom padding keeps dots away from grid edges
+      const y = CHART_HEIGHT - yPercent * (CHART_HEIGHT - 20) - 10
+      return { x, y }
+    }
+
+    const xLabelIndices = getXLabelIndices(points.length)
 
     return (
-      <View style={styles.chartContainer}>
-        {/* Y-Axis Labels */}
-        <View style={styles.yAxis}>
-          <Text style={styles.axisLabel}>{maxWeight}kg</Text>
-          <Text style={styles.axisLabel}>{Math.round((maxWeight + minWeight) / 2)}kg</Text>
-          <Text style={styles.axisLabel}>{minWeight}kg</Text>
-        </View>
+      <View>
+        <View style={styles.chartContainer}>
+          {/* Y-Axis Labels */}
+          <View style={styles.yAxis}>
+            <Text style={styles.axisLabel}>{maxWeight}kg</Text>
+            <Text style={styles.axisLabel}>{Math.round((maxWeight + minWeight) / 2)}kg</Text>
+            <Text style={styles.axisLabel}>{minWeight}kg</Text>
+          </View>
 
-        {/* Chart Area */}
-        <View style={[styles.chartArea, { height: chartHeight }]}>
-          {/* Grid Lines */}
-          <View style={[styles.gridLine, { top: 0 }]} />
-          <View style={[styles.gridLine, { top: chartHeight / 2 }]} />
-          <View style={[styles.gridLine, { top: chartHeight - 1 }]} />
+          {/* Plot + X axis stacked vertically */}
+          <View style={styles.chartAndXAxis}>
+            {/* Plot area */}
+            <View style={[styles.chartPlot, { height: CHART_HEIGHT }]}>
+              {/* Horizontal grid lines */}
+              <View style={[styles.gridLine, { top: 0 }]} />
+              <View style={[styles.gridLine, { top: CHART_HEIGHT / 2 }]} />
+              <View style={[styles.gridLine, { top: CHART_HEIGHT - 1 }]} />
 
-          {/* Data Points and Lines */}
-          <View style={styles.dataLayer}>
-            {points.map((point, index) => {
-              const x = points.length > 1 ? index * pointSpacing : chartWidth / 2
-              const yPercent = (point.weight_kg - minWeight) / weightRange
-              const y = chartHeight - (yPercent * (chartHeight - 20)) - 10 // Keep points within bounds
+              {/* Absolute layer: lines rendered first, dots on top */}
+              <View style={StyleSheet.absoluteFillObject}>
+                {/* Line segments — positioned at the midpoint between each pair of dots.
+                    Default transform-origin is the element's center, so rotating around
+                    the midpoint produces the correct line between the two points. */}
+                {points.slice(0, -1).map((_, index) => {
+                  const { x, y } = getXY(index)
+                  const { x: nx, y: ny } = getXY(index + 1)
+                  const dx = nx - x
+                  const dy = ny - y
+                  const length = Math.sqrt(dx * dx + dy * dy)
+                  const angle = Math.atan2(dy, dx)
+                  return (
+                    <View
+                      key={`line-${index}`}
+                      style={[
+                        styles.lineSegment,
+                        {
+                          left: (x + nx) / 2 - length / 2,
+                          top: (y + ny) / 2 - 1,
+                          width: length,
+                          transform: [{ rotate: `${angle}rad` }],
+                        },
+                      ]}
+                    />
+                  )
+                })}
 
-              return (
-                <React.Fragment key={point.date}>
-                  {/* Line to next point */}
-                  {index < points.length - 1 && (() => {
-                    const nextX = (index + 1) * pointSpacing
-                    const nextYPercent = (points[index + 1].weight_kg - minWeight) / weightRange
-                    const nextY = chartHeight - (nextYPercent * (chartHeight - 20)) - 10
-                    const deltaX = nextX - x
-                    const deltaY = nextY - y
-                    const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-                    const angle = Math.atan2(deltaY, deltaX)
-                    
-                    return (
+                {/* Data points — left: x-6, top: y-6 centers the 12×12 dot exactly on (x,y).
+                    No margin offset in the style, avoiding the double-offset bug. */}
+                {points.map((point, index) => {
+                  const { x, y } = getXY(index)
+                  const isSelected = selectedPoint?.date === point.date
+                  return (
+                    <TouchableOpacity
+                      key={`dot-${index}`}
+                      onPress={() => setSelectedPoint(isSelected ? null : point)}
+                      hitSlop={{ top: 12, right: 12, bottom: 12, left: 12 }}
+                      style={[
+                        styles.dataPoint,
+                        { left: x - 6, top: y - 6 },
+                        isSelected && styles.dataPointSelected,
+                      ]}
+                    >
                       <View
                         style={[
-                          styles.lineSegment,
-                          {
-                            left: x,
-                            top: y,
-                            width: length,
-                            transform: [{ rotate: `${angle}rad` }],
-                          },
+                          styles.dataPointInner,
+                          isSelected && styles.dataPointInnerSelected,
                         ]}
                       />
-                    )
-                  })()}
-                  {/* Data Point */}
-                  <View
-                    style={[
-                      styles.dataPoint,
-                      {
-                        left: x - 6,
-                        top: y - 6,
-                      },
-                    ]}
+                    </TouchableOpacity>
+                  )
+                })}
+              </View>
+            </View>
+
+            {/* X Axis date labels */}
+            <View style={styles.xAxis}>
+              {xLabelIndices.map(i => {
+                const { x } = getXY(i)
+                return (
+                  <Text
+                    key={`xlabel-${i}`}
+                    style={[styles.xAxisLabel, { left: x - 25 }]}
+                    numberOfLines={1}
                   >
-                    <View style={styles.dataPointInner} />
-                  </View>
-                </React.Fragment>
-              )
-            })}
+                    {formatDate(points[i].date)}
+                  </Text>
+                )
+              })}
+            </View>
           </View>
         </View>
+
+        {/* Tapped-point detail card */}
+        {selectedPoint ? (
+          <View style={styles.tooltipCard}>
+            <Ionicons name="calendar-outline" size={14} color={colors.text.secondary} />
+            <Text style={styles.tooltipDate}>{formatDateLong(selectedPoint.date)}</Text>
+            <Text style={styles.tooltipSep}>·</Text>
+            <Ionicons name="barbell-outline" size={14} color={colors.text.secondary} />
+            <Text style={styles.tooltipValue}>
+              {selectedPoint.weight_kg}kg × {selectedPoint.reps} reps
+            </Text>
+          </View>
+        ) : (
+          <Text style={styles.tapHint}>Tap a point to see details</Text>
+        )}
       </View>
     )
   }
@@ -193,7 +260,7 @@ export default function ProgressTab() {
         <Ionicons
           name={showExercisePicker ? 'chevron-up' : 'chevron-down'}
           size={24}
-          color="#1E3A5F"
+          color={colors.primary}
         />
       </TouchableOpacity>
 
@@ -223,7 +290,7 @@ export default function ProgressTab() {
                   {exercise.name}
                 </Text>
                 {selectedExercise?.id === exercise.id && (
-                  <Ionicons name="checkmark" size={20} color="#1E3A5F" />
+                  <Ionicons name="checkmark" size={20} color={colors.primary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -246,12 +313,12 @@ export default function ProgressTab() {
         ))}
       </View>
 
-      {/* Chart */}
+      {/* Chart Card */}
       <View style={styles.chartCard}>
         <Text style={styles.chartTitle}>Weight Progression</Text>
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#1E3A5F" />
+            <ActivityIndicator size="large" color={colors.primary} />
           </View>
         ) : (
           renderChart()
@@ -288,14 +355,17 @@ export default function ProgressTab() {
       {progressData?.data_points && progressData.data_points.length > 0 && (
         <View style={styles.recentCard}>
           <Text style={styles.recentTitle}>Recent Sessions</Text>
-          {progressData.data_points.slice(-5).reverse().map(point => (
-            <View key={point.date} style={styles.recentRow}>
-              <Text style={styles.recentDate}>{formatDate(point.date)}</Text>
-              <Text style={styles.recentValue}>
-                {point.weight_kg}kg × {point.reps}
-              </Text>
-            </View>
-          ))}
+          {progressData.data_points
+            .slice(-5)
+            .reverse()
+            .map(point => (
+              <View key={point.date} style={styles.recentRow}>
+                <Text style={styles.recentDate}>{formatDate(point.date)}</Text>
+                <Text style={styles.recentValue}>
+                  {point.weight_kg}kg × {point.reps}
+                </Text>
+              </View>
+            ))}
         </View>
       )}
     </ScrollView>
@@ -395,12 +465,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   loadingContainer: {
-    height: 200,
+    height: CHART_HEIGHT + 32,
     justifyContent: 'center',
     alignItems: 'center',
   },
   emptyChart: {
-    height: 200,
+    height: CHART_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -415,22 +485,26 @@ const styles = StyleSheet.create({
     color: colors.text.muted,
     marginTop: 4,
   },
+  // ── Chart layout ──────────────────────────────────────────────────────────
   chartContainer: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   yAxis: {
-    width: 40,
-    height: 200,
+    width: Y_AXIS_WIDTH,
+    height: CHART_HEIGHT,
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     paddingRight: 8,
   },
   axisLabel: {
-    fontSize: 11,
+    fontSize: 10,
     color: colors.text.muted,
   },
-  chartArea: {
+  chartAndXAxis: {
     flex: 1,
+  },
+  chartPlot: {
     position: 'relative',
   },
   gridLine: {
@@ -440,25 +514,17 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.borderLight,
   },
-  dataLayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
+  // ── Line segments ─────────────────────────────────────────────────────────
   lineSegment: {
     position: 'absolute',
     height: 2,
     backgroundColor: colors.primary,
-    transformOrigin: 'left center',
   },
+  // ── Data points ───────────────────────────────────────────────────────────
   dataPoint: {
     position: 'absolute',
     width: 12,
     height: 12,
-    marginLeft: -6,
-    marginTop: -6,
     borderRadius: 6,
     backgroundColor: colors.surface,
     borderWidth: 2,
@@ -466,12 +532,64 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  dataPointSelected: {
+    borderColor: colors.accent,
+    transform: [{ scale: 1.3 }],
+  },
   dataPointInner: {
-    width: 6,
-    height: 6,
+    width: 5,
+    height: 5,
     borderRadius: 3,
     backgroundColor: colors.primary,
   },
+  dataPointInnerSelected: {
+    backgroundColor: colors.accent,
+  },
+  // ── X axis labels ─────────────────────────────────────────────────────────
+  xAxis: {
+    height: 24,
+    position: 'relative',
+    marginTop: 4,
+  },
+  xAxisLabel: {
+    position: 'absolute',
+    width: 50,
+    textAlign: 'center',
+    fontSize: 10,
+    color: colors.text.muted,
+    top: 0,
+  },
+  // ── Tooltip / tap hint ────────────────────────────────────────────────────
+  tooltipCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.background,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginTop: 12,
+  },
+  tooltipDate: {
+    fontSize: 13,
+    color: colors.text.secondary,
+  },
+  tooltipSep: {
+    fontSize: 13,
+    color: colors.text.muted,
+  },
+  tooltipValue: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.text.primary,
+  },
+  tapHint: {
+    marginTop: 10,
+    fontSize: 11,
+    color: colors.text.faint,
+    textAlign: 'center',
+  },
+  // ── PR card ───────────────────────────────────────────────────────────────
   prCard: {
     backgroundColor: '#fffbeb',
     borderRadius: 12,
@@ -522,6 +640,7 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginTop: 2,
   },
+  // ── Recent sessions ───────────────────────────────────────────────────────
   recentCard: {
     backgroundColor: colors.surface,
     borderRadius: 12,
