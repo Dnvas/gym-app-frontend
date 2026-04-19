@@ -19,6 +19,7 @@ import { supabase } from '../../lib/supabase'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useWorkoutContext } from '../../contexts/WorkoutContext'
 import { useTemplateManagement } from '../../hooks/useTemplateManagement'
+import { useToast } from '../../contexts/ToastContext'
 import { WorkoutTemplateWithExercises, TemplateExercise, Exercise } from '../../types/workout'
 import { HomeStackParamList } from '../../navigation/MainNavigator'
 import { formatMuscleGroup, getMuscleColor } from '../../utils/formatting'
@@ -37,6 +38,7 @@ export default function TemplateDetailScreen({
   const { profile } = useAuthContext()
   const { startWorkout, isActive, loading: workoutLoading } = useWorkoutContext()
   const { deleteTemplate } = useTemplateManagement()
+  const { showError } = useToast()
 
   const [template, setTemplate] = useState<WorkoutTemplateWithExercises | null>(null)
   const [loading, setLoading] = useState(true)
@@ -73,8 +75,7 @@ export default function TemplateDetailScreen({
 
       setTemplate(data)
     } catch (error) {
-      console.error('Error fetching template:', error)
-      Alert.alert('Error', 'Failed to load template')
+      showError('Failed to load template')
       navigation.goBack()
     } finally {
       setLoading(false)
@@ -102,7 +103,7 @@ export default function TemplateDetailScreen({
             if (result.success) {
               navigation.goBack()
             } else {
-              Alert.alert('Error', result.error ?? 'Failed to delete template')
+              showError(result.error ?? 'Failed to delete template')
             }
           },
         },
@@ -142,7 +143,7 @@ export default function TemplateDetailScreen({
     if (success && workoutId) {
       navigation.replace('ActiveWorkout', { workoutId })
     } else {
-      Alert.alert('Error', error || 'Failed to start workout')
+      showError(typeof error === 'string' ? error : 'Failed to start workout')
     }
   }
 
@@ -231,7 +232,7 @@ export default function TemplateDetailScreen({
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} accessibilityRole="button" accessibilityLabel="Go back">
           <Ionicons name="arrow-back" size={24} color="#1E3A5F" />
         </TouchableOpacity>
         <View style={styles.headerContent}>
@@ -244,10 +245,10 @@ export default function TemplateDetailScreen({
         </View>
         {isOwnTemplate && (
           <View style={styles.headerActions}>
-            <TouchableOpacity onPress={handleEdit} style={styles.headerActionBtn} hitSlop={6}>
+            <TouchableOpacity onPress={handleEdit} style={styles.headerActionBtn} hitSlop={6} accessibilityRole="button" accessibilityLabel="Edit template">
               <Ionicons name="create-outline" size={22} color="#1E3A5F" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleDeletePress} style={styles.headerActionBtn} hitSlop={6}>
+            <TouchableOpacity onPress={handleDeletePress} style={styles.headerActionBtn} hitSlop={6} accessibilityRole="button" accessibilityLabel="Delete template" accessibilityHint="Asks for confirmation before deleting">
               <Ionicons name="trash-outline" size={22} color="#e74c3c" />
             </TouchableOpacity>
           </View>
