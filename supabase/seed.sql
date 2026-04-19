@@ -90,7 +90,8 @@ BEGIN
   );
 
   INSERT INTO public.profiles (id, username, default_weight_unit)
-  VALUES (demo_id, 'DemoLifter', 'kg');
+  VALUES (demo_id, 'DemoLifter', 'kg')
+  ON CONFLICT (id) DO UPDATE SET username = EXCLUDED.username, default_weight_unit = EXCLUDED.default_weight_unit;
 
   -- ── 2. Resolve exercise IDs ────────────────────────────────────────────────
   SELECT id INTO ex_bench    FROM public.exercises WHERE name ILIKE '%barbell bench press%'    AND created_by IS NULL LIMIT 1;
