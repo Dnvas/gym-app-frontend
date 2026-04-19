@@ -276,6 +276,30 @@ export function useWorkout() {
     []
   )
 
+  // Reorder exercises within the active workout
+  const reorderExercise = useCallback(
+    async (fromIndex: number, toIndex: number) => {
+      if (!state.workout) return
+
+      const next = [...state.exercises]
+      const [moved] = next.splice(fromIndex, 1)
+      next.splice(toIndex, 0, moved)
+      const reindexed = next.map((e, i) => ({ ...e, order_index: i }))
+
+      setState(prev => ({ ...prev, exercises: reindexed }))
+
+      await Promise.all(
+        reindexed.map(e =>
+          supabase
+            .from('workout_exercises')
+            .update({ order_index: e.order_index })
+            .eq('id', e.id)
+        )
+      )
+    },
+    [state.workout, state.exercises]
+  )
+
   // Complete the workout
   const completeWorkout = useCallback(
     async (notes?: string) => {
@@ -451,6 +475,7 @@ export function useWorkout() {
     updateSet,
     deleteSet,
     swapExercise,
+    reorderExercise,
     completeWorkout,
     abandonWorkout,
     getPreviousSets,
