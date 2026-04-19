@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -13,17 +13,29 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useToast } from '../../contexts/ToastContext'
+import { useAnalytics, ProfileStats } from '../../hooks/useAnalytics'
 import { colors } from '../../theme'
+
+function formatVolume(kg: number): string {
+  if (kg >= 1000) return `${(kg / 1000).toFixed(1)}k kg`
+  return `${kg} kg`
+}
 
 export default function ProfileScreen() {
   const { profile, user, signOut, updateProfile, loading } = useAuthContext()
   const { showError } = useToast()
+  const { fetchProfileStats } = useAnalytics()
   const [isEditing, setIsEditing] = useState(false)
+  const [profileStats, setProfileStats] = useState<ProfileStats>({ totalWorkouts: 0, totalVolumeKg: 0, prsAchieved: 0 })
   const [username, setUsername] = useState(profile?.username ?? '')
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>(
     profile?.default_weight_unit ?? 'kg'
   )
   const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    fetchProfileStats().then(setProfileStats)
+  }, [fetchProfileStats])
 
   async function handleSave() {
     if (!username.trim()) {
@@ -180,19 +192,15 @@ export default function ProfileScreen() {
           <Text style={styles.cardTitle}>Statistics</Text>
           <View style={styles.statsGrid}>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
+              <Text style={styles.statNumber}>{profileStats.totalWorkouts}</Text>
               <Text style={styles.statLabel}>Total Workouts</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Total Sets</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
+              <Text style={styles.statNumber}>{profileStats.prsAchieved}</Text>
               <Text style={styles.statLabel}>PRs Achieved</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0 kg</Text>
+              <Text style={styles.statNumber}>{formatVolume(profileStats.totalVolumeKg)}</Text>
               <Text style={styles.statLabel}>Total Volume</Text>
             </View>
           </View>

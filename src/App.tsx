@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import { WorkoutProvider } from './contexts/WorkoutContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
+import { OfflineBanner } from './components/ui/OfflineBanner'
 import { RootNavigator } from './navigation'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
             <WorkoutProvider>
               <StatusBar style="dark" />
               <RootNavigator />
+              <OfflineBanner />
             </WorkoutProvider>
           </AuthProvider>
         </ToastProvider>

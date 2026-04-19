@@ -14,8 +14,20 @@ import {
 } from '../types/analytics'
 import { MuscleGroup } from '../types/workout'
 import { VolumeViewRow, ProgressSetRow } from '../types/supabase'
-import { getWeekBoundaries, toDateKey } from '../utils/dateHelpers'
+import { getWeekBoundaries, getMonthBoundaries, toDateKey } from '../utils/dateHelpers'
 import { calcPctChange } from '../utils/workoutCalculations'
+
+export interface HomeStats {
+  thisWeekWorkouts: number
+  thisWeekVolumeKg: number
+  prsThisMonth: number
+}
+
+export interface ProfileStats {
+  totalWorkouts: number
+  totalVolumeKg: number
+  prsAchieved: number
+}
 
 function formatDate(date: Date): string {
   return date.toISOString()
@@ -361,6 +373,87 @@ export function useAnalytics() {
     [user]
   )
 
+  const fetchHomeStats = useCallback(async (): Promise<HomeStats> => {
+    const empty: HomeStats = { thisWeekWorkouts: 0, thisWeekVolumeKg: 0, prsThisMonth: 0 }
+    if (!user) return empty
+
+    try {
+      const { start, end } = getWeekBoundaries()
+      const { start: monthStart, end: monthEnd } = getMonthBoundaries(new Date())
+
+      const [workoutsRes, volumeRes, prsRes] = await Promise.all([
+        supabase
+          .from('workouts')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('status', 'completed')
+          .gte('completed_at', start.toISOString())
+          .lte('completed_at', end.toISOString()),
+        supabase
+          .from('exercise_volume_by_muscle')
+          .select('total_volume_kg')
+          .eq('user_id', user.id)
+          .gte('workout_date', start.toISOString())
+          .lte('workout_date', end.toISOString()),
+        supabase
+          .from('personal_records')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .gte('achieved_at', monthStart)
+          .lte('achieved_at', monthEnd),
+      ])
+
+      const thisWeekVolumeKg = (volumeRes.data ?? []).reduce(
+        (sum: number, row: { total_volume_kg: number }) => sum + (row.total_volume_kg ?? 0),
+        0
+      )
+
+      return {
+        thisWeekWorkouts: workoutsRes.count ?? 0,
+        thisWeekVolumeKg: Math.round(thisWeekVolumeKg),
+        prsThisMonth: prsRes.count ?? 0,
+      }
+    } catch {
+      return empty
+    }
+  }, [user])
+
+  const fetchProfileStats = useCallback(async (): Promise<ProfileStats> => {
+    const empty: ProfileStats = { totalWorkouts: 0, totalVolumeKg: 0, prsAchieved: 0 }
+    if (!user) return empty
+
+    try {
+      const [workoutsRes, prsRes, volumeRes] = await Promise.all([
+        supabase
+          .from('workouts')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('status', 'completed'),
+        supabase
+          .from('personal_records')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id),
+        supabase
+          .from('exercise_volume_by_muscle')
+          .select('total_volume_kg')
+          .eq('user_id', user.id),
+      ])
+
+      const totalVolumeKg = (volumeRes.data ?? []).reduce(
+        (sum: number, row: { total_volume_kg: number }) => sum + (row.total_volume_kg ?? 0),
+        0
+      )
+
+      return {
+        totalWorkouts: workoutsRes.count ?? 0,
+        totalVolumeKg: Math.round(totalVolumeKg),
+        prsAchieved: prsRes.count ?? 0,
+      }
+    } catch {
+      return empty
+    }
+  }, [user])
+
   // Fetch exercises for PR entry dropdown
   const fetchExercisesForPR = useCallback(async (): Promise<ExerciseForPR[]> => {
     try {
@@ -385,5 +478,7 @@ export function useAnalytics() {
     fetchGroupedPRs,
     addManualPR,
     fetchExercisesForPR,
+    fetchHomeStats,
+    fetchProfileStats,
   }
 }

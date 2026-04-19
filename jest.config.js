@@ -8,6 +8,7 @@ const config = {
   moduleNameMapper: {
     '^react-native-safe-area-context$': '<rootDir>/__mocks__/react-native-safe-area-context.js',
     '^@react-native-async-storage/async-storage$': '<rootDir>/node_modules/@react-native-async-storage/async-storage/jest/async-storage-mock',
+    '^@react-native-community/netinfo$': '<rootDir>/__mocks__/@react-native-community/netinfo.js',
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
