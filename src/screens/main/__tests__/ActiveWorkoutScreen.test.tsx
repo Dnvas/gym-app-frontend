@@ -6,6 +6,7 @@ import ActiveWorkoutScreen from '../ActiveWorkoutScreen'
 
 // ── Module mocks ───────────────────────────────────────────────────────────────
 
+jest.mock('../../../lib/supabase')
 jest.mock('../../../contexts/WorkoutContext')
 jest.mock('../../../contexts/AuthContext')
 
