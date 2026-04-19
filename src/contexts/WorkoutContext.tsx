@@ -22,6 +22,7 @@ interface WorkoutContextType {
   updateSet: (setId: string, updates: Partial<WorkoutSet>) => Promise<{ success: boolean; error: string | null }>
   deleteSet: (setId: string, workoutExerciseId: string) => Promise<{ success: boolean; error: string | null }>
   swapExercise: (workoutExerciseId: string, newExerciseId: string) => Promise<{ success: boolean; error: string | null }>
+  reorderExercise: (fromIndex: number, toIndex: number) => Promise<void>
   completeWorkout: (notes?: string) => Promise<{ success: boolean; error: string | null; workout?: Workout }>
   abandonWorkout: () => Promise<{ success: boolean; error: string | null }>
   getPreviousSets: (exerciseId: string) => Promise<PreviousSetData[]>

@@ -45,6 +45,7 @@ export default function ActiveWorkoutScreen({
     completeWorkout,
     abandonWorkout,
     getWorkoutStats,
+    reorderExercise,
   } = useWorkoutContext()
   const { showError } = useToast()
 
@@ -140,6 +141,14 @@ export default function ActiveWorkoutScreen({
     if (currentExerciseIndex > 0) {
       setCurrentExerciseIndex(prev => prev - 1)
     }
+  }
+
+  async function handleMoveExercise(direction: 'up' | 'down') {
+    const toIndex = direction === 'up'
+      ? currentExerciseIndex - 1
+      : currentExerciseIndex + 1
+    await reorderExercise(currentExerciseIndex, toIndex)
+    setCurrentExerciseIndex(toIndex)
   }
 
   async function handleFinishWorkout() {
@@ -246,6 +255,39 @@ export default function ActiveWorkoutScreen({
           <Text style={styles.statLabel}>Done</Text>
         </View>
       </View>
+
+      {/* Reorder Controls */}
+      {exercises.length > 1 && (
+        <View style={styles.reorderRow}>
+          <TouchableOpacity
+            onPress={() => handleMoveExercise('up')}
+            disabled={currentExerciseIndex === 0}
+            accessibilityLabel="Move exercise up"
+            hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+            testID="move-exercise-up"
+          >
+            <Ionicons
+              name="chevron-up"
+              size={22}
+              color={currentExerciseIndex === 0 ? colors.border : colors.text.secondary}
+            />
+          </TouchableOpacity>
+          <Text style={styles.reorderLabel}>Reorder exercise</Text>
+          <TouchableOpacity
+            onPress={() => handleMoveExercise('down')}
+            disabled={currentExerciseIndex === exercises.length - 1}
+            accessibilityLabel="Move exercise down"
+            hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+            testID="move-exercise-down"
+          >
+            <Ionicons
+              name="chevron-down"
+              size={22}
+              color={currentExerciseIndex === exercises.length - 1 ? colors.border : colors.text.secondary}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Current Exercise */}
       {currentExercise && (
@@ -562,6 +604,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text.secondary,
     marginBottom: 4,
+  },
+  reorderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  reorderLabel: {
+    fontSize: 12,
+    color: colors.text.muted,
   },
   notesInput: {
     backgroundColor: colors.background,
