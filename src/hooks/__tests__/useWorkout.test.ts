@@ -186,6 +186,38 @@ describe('completeWorkout', () => {
     expect(updateCall.status).toBe('completed')
     expect(updateCall.completed_at).toBeTruthy()
   })
+
+  it('includes notes string in the update payload', async () => {
+    const workout = { id: 'w-1', user_id: MOCK_USER.id, name: 'Push Day', status: 'in_progress' }
+    const exercises = [{ id: 'we-1', exercise_id: 'ex-1', order_index: 0, exercise: {} }]
+    mockSupabaseResponse(workout)
+    mockSupabaseResponse(exercises)
+
+    const { result } = renderHook(() => useWorkout())
+    await act(async () => { await result.current.startWorkout(makeTemplate()) })
+
+    mockSupabaseResponse({ ...workout, status: 'completed', notes: 'Great session' })
+    await act(async () => { await result.current.completeWorkout('Great session') })
+
+    const updateCall = mockChain.update.mock.calls[0][0]
+    expect(updateCall.notes).toBe('Great session')
+  })
+
+  it('stores null notes when called without notes argument', async () => {
+    const workout = { id: 'w-1', user_id: MOCK_USER.id, name: 'Push Day', status: 'in_progress' }
+    const exercises = [{ id: 'we-1', exercise_id: 'ex-1', order_index: 0, exercise: {} }]
+    mockSupabaseResponse(workout)
+    mockSupabaseResponse(exercises)
+
+    const { result } = renderHook(() => useWorkout())
+    await act(async () => { await result.current.startWorkout(makeTemplate()) })
+
+    mockSupabaseResponse({ ...workout, status: 'completed', notes: null })
+    await act(async () => { await result.current.completeWorkout() })
+
+    const updateCall = mockChain.update.mock.calls[0][0]
+    expect(updateCall.notes).toBeNull()
+  })
 })
 
 describe('getPreviousSets', () => {

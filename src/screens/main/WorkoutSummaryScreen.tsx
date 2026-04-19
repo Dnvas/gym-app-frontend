@@ -34,6 +34,7 @@ interface WorkoutStats {
   totalSets: number
   totalVolume: number
   exerciseCount: number
+  notes: string | null
   exercises: {
     name: string
     sets: number
@@ -65,7 +66,11 @@ export default function WorkoutSummaryScreen({
       const { data: workout, error: workoutError } = await supabase
         .from('workouts')
         .select(`
-          *,
+          id,
+          name,
+          started_at,
+          completed_at,
+          notes,
           workout_exercises(
             *,
             exercise:exercises(*),
@@ -136,6 +141,7 @@ export default function WorkoutSummaryScreen({
         totalSets,
         totalVolume: Math.round(totalVolume),
         exerciseCount: exercises.length,
+        notes: workout.notes ?? null,
         exercises: exerciseStats,
         newPRs,
       })
@@ -240,6 +246,17 @@ export default function WorkoutSummaryScreen({
             <Text style={styles.statLabel}>Exercises</Text>
           </View>
         </View>
+
+        {/* Workout Notes */}
+        {stats.notes && (
+          <View style={styles.notesCard}>
+            <View style={styles.notesHeader}>
+              <Ionicons name="document-text-outline" size={16} color={colors.text.secondary} />
+              <Text style={styles.notesLabel}>Notes</Text>
+            </View>
+            <Text style={styles.notesText}>{stats.notes}</Text>
+          </View>
+        )}
 
         {/* Exercise Breakdown */}
         <View style={styles.exerciseSection}>
@@ -421,6 +438,37 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.primary,
     fontWeight: '500',
+  },
+  notesCard: {
+    backgroundColor: colors.surface,
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 0,
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  notesHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 6,
+  },
+  notesLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.text.secondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  notesText: {
+    fontSize: 14,
+    color: colors.text.primary,
+    lineHeight: 20,
   },
   doneButton: {
     marginHorizontal: 16,

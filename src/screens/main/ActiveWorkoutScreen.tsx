@@ -13,6 +13,7 @@ import {
   Alert,
   Modal,
   BackHandler,
+  TextInput,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -53,6 +54,7 @@ export default function ActiveWorkoutScreen({
   const [restDuration, setRestDuration] = useState(90)
   const [showSwapModal, setShowSwapModal] = useState(false)
   const [showFinishModal, setShowFinishModal] = useState(false)
+  const [workoutNotes, setWorkoutNotes] = useState('')
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Load workout on mount
@@ -166,8 +168,10 @@ export default function ActiveWorkoutScreen({
   }
 
   async function confirmFinishWorkout() {
-    const { success, error, workout: completedWorkout } = await completeWorkout()
+    const notes = workoutNotes.trim() || undefined
+    const { success, error, workout: completedWorkout } = await completeWorkout(notes)
     setShowFinishModal(false)
+    setWorkoutNotes('')
 
     if (success && completedWorkout) {
       navigation.replace('WorkoutSummary', { workoutId: completedWorkout.id })
@@ -335,7 +339,7 @@ export default function ActiveWorkoutScreen({
         visible={showFinishModal}
         transparent
         animationType="fade"
-        onRequestClose={() => setShowFinishModal(false)}
+        onRequestClose={() => { setShowFinishModal(false); setWorkoutNotes('') }}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -351,10 +355,21 @@ export default function ActiveWorkoutScreen({
                 {formatTime(elapsedSeconds)} duration
               </Text>
             </View>
+            <TextInput
+              style={styles.notesInput}
+              placeholder="Add workout notes (optional)"
+              value={workoutNotes}
+              onChangeText={setWorkoutNotes}
+              multiline
+              numberOfLines={3}
+              maxLength={500}
+              placeholderTextColor={colors.text.muted}
+              accessibilityLabel="Workout notes"
+            />
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalCancelButton}
-                onPress={() => setShowFinishModal(false)}
+                onPress={() => { setShowFinishModal(false); setWorkoutNotes('') }}
               >
                 <Text style={styles.modalCancelText}>Keep Going</Text>
               </TouchableOpacity>
@@ -547,6 +562,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text.secondary,
     marginBottom: 4,
+  },
+  notesInput: {
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    padding: 12,
+    minHeight: 80,
+    textAlignVertical: 'top',
+    color: colors.text.primary,
+    fontSize: 14,
+    marginBottom: 16,
   },
   modalButtons: {
     flexDirection: 'row',
