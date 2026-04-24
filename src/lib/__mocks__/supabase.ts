@@ -61,6 +61,40 @@ export function setupChain() {
 
 export const mockFrom = jest.fn().mockReturnValue(mockChain)
 
+// ── Auth mock ─────────────────────────────────────────────────────────────────
+// Mirrors the setupChain() pattern: call setupAuth() in each test's beforeEach
+// after jest.clearAllMocks() to restore default implementations.
+
+export const mockUnsubscribe = jest.fn()
+
+let _authStateCallback: ((event: string, session: any) => void) | null = null
+
+export const mockAuth = {
+  getSession: jest.fn(),
+  onAuthStateChange: jest.fn(),
+  signInWithPassword: jest.fn(),
+  signUp: jest.fn(),
+  signOut: jest.fn(),
+}
+
+export function setupAuth() {
+  _authStateCallback = null
+  mockAuth.getSession.mockResolvedValue({ data: { session: null } })
+  mockAuth.onAuthStateChange.mockImplementation((cb: (event: string, session: any) => void) => {
+    _authStateCallback = cb
+    return { data: { subscription: { unsubscribe: mockUnsubscribe } } }
+  })
+  mockAuth.signInWithPassword.mockResolvedValue({ error: null })
+  mockAuth.signUp.mockResolvedValue({ data: { session: null }, error: null })
+  mockAuth.signOut.mockResolvedValue({})
+}
+
+/** Manually fire the onAuthStateChange callback captured during hook mount. */
+export function triggerAuthStateChange(event: string, session: any) {
+  _authStateCallback?.(event, session)
+}
+
 export const supabase = {
   from: mockFrom,
+  auth: mockAuth,
 }
