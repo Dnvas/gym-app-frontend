@@ -70,12 +70,11 @@ export default function SetInputCard({
 
       // Initialize set rows from existing sets or create empty ones
       const existingSets = workoutExercise.sets ?? []
-      const workingSets = existingSets.filter(s => !s.is_warmup)
-      
+
       const initialSets: SetRowData[] = []
-      
-      for (let i = 1; i <= Math.max(targetSets, workingSets.length); i++) {
-        const existingSet = workingSets.find(s => s.set_number === i)
+
+      for (let i = 1; i <= Math.max(targetSets, existingSets.length); i++) {
+        const existingSet = existingSets.find(s => s.set_number === i)
         const prevSet = prevSets.find(p => p.set_number === i)
         
         if (existingSet) {
@@ -83,7 +82,7 @@ export default function SetInputCard({
             setNumber: i,
             weight: existingSet.weight_kg?.toString() ?? '',
             reps: existingSet.reps?.toString() ?? '',
-            isWarmup: false,
+            isWarmup: existingSet.is_warmup ?? false,
             isCompleted: true,
             setId: existingSet.id,
             previousWeight: prevSet?.weight_kg,
@@ -145,6 +144,28 @@ export default function SetInputCard({
     )
   }
 
+  async function toggleWarmup(index: number) {
+    const current = sets[index]
+    const nextWarmup = !current.isWarmup
+
+    setSets(prev =>
+      prev.map((set, i) =>
+        i === index ? { ...set, isWarmup: nextWarmup } : set
+      )
+    )
+
+    if (current.isCompleted && current.setId) {
+      const result = await updateSet(current.setId, { is_warmup: nextWarmup })
+      if (!result.success) {
+        setSets(prev =>
+          prev.map((set, i) =>
+            i === index ? { ...set, isWarmup: current.isWarmup } : set
+          )
+        )
+      }
+    }
+  }
+
   async function handleSaveSet(index: number) {
     const set = sets[index]
     const weight = parseFloat(set.weight)
@@ -161,6 +182,7 @@ export default function SetInputCard({
       await updateSet(set.setId, {
         weight_kg: weight,
         reps: reps,
+        is_warmup: set.isWarmup,
       })
     } else {
       // Create new set
@@ -168,7 +190,7 @@ export default function SetInputCard({
         set_number: set.setNumber,
         weight_kg: weight,
         reps: reps,
-        is_warmup: false,
+        is_warmup: set.isWarmup,
         target_reps: targetReps ?? undefined,
       })
 
@@ -188,7 +210,7 @@ export default function SetInputCard({
   }
 
   function addSet() {
-    const nextSetNumber = sets.length + 1
+    const nextSetNumber = sets.reduce((max, set) => Math.max(max, set.setNumber), 0) + 1
     const prevSet = previousSets.find(p => p.set_number === nextSetNumber) ?? previousSets[previousSets.length - 1]
     
     setSets(prev => [
@@ -270,7 +292,11 @@ export default function SetInputCard({
         {sets.map((set, index) => (
           <View
             key={index}
-            style={[styles.setRow, set.isCompleted && styles.setRowCompleted]}
+            style={[
+              styles.setRow,
+              set.isWarmup && styles.setRowWarmup,
+              set.isCompleted && styles.setRowCompleted,
+            ]}
           >
             {/* Set Number */}
             <View style={styles.setColumn}>
@@ -281,6 +307,19 @@ export default function SetInputCard({
                   <Text style={styles.setNumberText}>{set.setNumber}</Text>
                 )}
               </View>
+              <TouchableOpacity
+                style={[styles.warmupToggle, set.isWarmup && styles.warmupToggleActive]}
+                onPress={() => toggleWarmup(index)}
+                accessibilityRole="button"
+                accessibilityLabel={`Toggle warmup for set ${set.setNumber}`}
+                accessibilityState={{ selected: set.isWarmup }}
+              >
+                <Text
+                  style={[styles.warmupToggleText, set.isWarmup && styles.warmupToggleTextActive]}
+                >
+                  W
+                </Text>
+              </TouchableOpacity>
             </View>
 
             {/* Previous */}
@@ -484,6 +523,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     backgroundColor: colors.borderLight,
   },
+  setRowWarmup: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    backgroundColor: colors.surface,
+  },
   setRowCompleted: {
     backgroundColor: '#e8f8f5',
   },
@@ -502,6 +546,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: colors.text.secondary,
+  },
+  warmupToggle: {
+    marginTop: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  warmupToggleActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
+  },
+  warmupToggleText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: colors.text.muted,
+  },
+  warmupToggleTextActive: {
+    color: colors.text.inverse,
   },
   prevText: {
     fontSize: 12,
