@@ -294,8 +294,8 @@ export default function SetInputCard({
             key={index}
             style={[
               styles.setRow,
-              set.isWarmup && styles.setRowWarmup,
               set.isCompleted && styles.setRowCompleted,
+              set.isWarmup && styles.setRowWarmup,
             ]}
           >
             {/* Set Number */}
@@ -521,12 +521,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 8,
     marginBottom: 6,
-    backgroundColor: colors.borderLight,
+    backgroundColor: colors.surface,
   },
   setRowWarmup: {
     borderWidth: 1,
-    borderColor: colors.primary,
-    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.borderLight,
   },
   setRowCompleted: {
     backgroundColor: '#e8f8f5',
@@ -557,8 +557,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   warmupToggleActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
+    borderColor: colors.border,
+    backgroundColor: colors.borderLight,
   },
   warmupToggleText: {
     fontSize: 10,
@@ -566,7 +566,7 @@ const styles = StyleSheet.create({
     color: colors.text.muted,
   },
   warmupToggleTextActive: {
-    color: colors.text.inverse,
+    color: colors.text.muted,
   },
   prevText: {
     fontSize: 12,
