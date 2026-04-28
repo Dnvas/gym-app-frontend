@@ -190,6 +190,12 @@ export default function WorkoutDetailScreen({
                     <Text style={[styles.setCell, styles.setCellRpe, styles.setHeaderText]}>RPE</Text>
                   </View>
 
+                  {warmupSets.length > 0 && (
+                    <View style={styles.setSectionRow}>
+                      <Text style={styles.setSectionText}>Warmup sets</Text>
+                    </View>
+                  )}
+
                   {/* Warmup sets */}
                   {warmupSets.map(set => (
                     <View key={set.id} style={[styles.setRow, styles.setRowWarmup]}>
@@ -442,7 +448,21 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.borderLight,
   },
   setRowWarmup: {
-    backgroundColor: colors.borderLight,
+    backgroundColor: colors.surfaceAlt,
+  },
+  setSectionRow: {
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderLight,
+    backgroundColor: colors.surface,
+  },
+  setSectionText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.text.muted,
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
   },
   setCell: {
     fontSize: 14,
